@@ -20,12 +20,16 @@ pub async fn main() {
 	let info_section = include_str!("../html/o_akci.html");
 	let timetable_section = include_str!("../html/harmonogram.html");
 	let contacts_section = include_str!("../html/kontakty.html");
+	let main_css = include_str!("../html/main.css");
+	let icon = include_bytes!("../img/ico.png");
 
 	let root_html = insert_sections(base_html, &[intro_section, info_section, timetable_section, contacts_section]);
 	let root = warp::path::end().map(move || { warp::reply::html(root_html.clone()) });
 	let empty_html = base_html;
 	let empty = warp::path("empty").map(move || { warp::reply::html(empty_html) });
-	let routes = warp::get().and(root.or(empty));
+	let css = warp::path("main.css").map(move || { warp::http::Response::builder().header("content-type", "text/css").body(main_css) });
+	let icon = warp::path!("img" / "icon.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*icon)) });
+	let routes = warp::get().and(root.or(css).or(icon).or(empty));
 	let addr = ([127, 0, 0, 1], 3752);
 	println!("serving {}.{}.{}.{}:{}", addr.0[0], addr.0[1], addr.0[2], addr.0[3], addr.1);
 	warp::serve(routes).run(addr).await;
