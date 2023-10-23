@@ -26,3 +26,9 @@ td{
 	overflow-y:scroll;
 	overscroll-behavior:contain;
 }
+header{
+	width:100%;
+}
+.header_bg{
+	width:100%;
+}

@@ -5,6 +5,16 @@ fn insert_section(src : &str, section : &str) -> String {
 	out.insert_str(src.find("</main>").unwrap_or(src.len()), section);
 	out
 }
+fn _insert_js(src : &str, js : &str) -> String {
+	let mut out = src.to_owned();
+	out.insert_str(src.find("</body>").unwrap_or(src.len()), js);
+	out
+}
+fn insert_annoation_autopopup(src : &str, dayid : &str, id : &str) -> String {
+	let mut out = src.to_owned();
+	out.insert_str(src.find("</body>").unwrap_or(src.len()), &format!("<script>popup(\"{}/{}\");</script>", dayid, id));
+	out
+}
 fn insert_sections(src : &str, sections : &[&str]) -> String {
 	let mut out = src.to_owned();
 	for s in sections {
@@ -27,15 +37,18 @@ pub async fn main() {
 	let icon_img = include_bytes!("../img/ico.png");
 
 	let root_html = insert_sections(base_html, &[intro_section, info_section, timetable_section, contacts_section]);
-	let root = warp::path::end().map(move || { warp::reply::html(root_html.clone()) });
-	let empty_html = base_html;
-	let empty = warp::path("empty").map(move || { warp::reply::html(empty_html) });
+	let root_annotation_html = insert_sections(base_html, &[intro_section, info_section, timetable_section, contacts_section]);
+	let root = warp::path::end().map(move || { warp::reply::html(root_html.clone()) }).or(
+		warp::path!("anotace" / String / String).map(move |dayid : String, id : String| { warp::reply::html(insert_annoation_autopopup(&root_annotation_html, &dayid, &id)) }));
+
 	let css = warp::path("main.css").map(move || { warp::http::Response::builder().header("content-type", "text/css").body(main_css) });
 	let js = warp::path("main.js").map(move || { warp::http::Response::builder().header("content-type", "text/javascript").body(main_js) });
 	let tt_js = warp::path("harmonogram.js").map(move || { warp::http::Response::builder().header("content-type", "text/javascript").body(timetable_js) });
 	let title = warp::path!("img" / "title.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*title_img)) });
 	let icon = warp::path!("img" / "icon.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*icon_img)) });
-	let routes = warp::get().and(root.or(css).or(js).or(tt_js).or(title).or(icon).or(empty));
+	let resources = css.or(js).or(tt_js).or(title).or(icon);
+
+	let routes = warp::get().and(root.or(resources));
 	let addr = ([127, 0, 0, 1], 3752);
 	println!("serving {}.{}.{}.{}:{}", addr.0[0], addr.0[1], addr.0[2], addr.0[3], addr.1);
 	warp::serve(routes).run(addr).await;
