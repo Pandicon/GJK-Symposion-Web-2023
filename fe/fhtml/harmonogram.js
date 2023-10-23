@@ -1,6 +1,10 @@
 const api="https://api.simp.klubkepler.eu/";
 const days=["Čtvrtek 16.11.","Pátek 17.11.","Sobota 18.11"];
 const dayids=["streda/","ctvrtek/","patek/"];
+function format_update(utct){
+	let d=new Date(utct*1000);
+	return d.getDate()+"."+d.getMonth()+". "+("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2)
+}
 function lecture_popup(lec,title,time,room,id){
 	return async function(){
 		const resp=await fetch(api+"anotace/"+id);
@@ -12,9 +16,7 @@ function lecture_popup(lec,title,time,room,id){
 		document.getElementById("ov_room").textContent=room;
 		document.getElementById("ov_annotation").textContent=data.data.info.annotation;
 		document.getElementById("ov_lecturer_info").textContent=data.data.info.lecturer_info;
-		let d=new Date(data.data.last_updated);
-		document.getElementById("ov_last_update").textContent="data z "+d.getDate()+"."+d.getMonth()+". "+
-			("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2);
+		document.getElementById("ov_last_update").textContent="data z "+format_update(data.data.last_updated);
 	};
 }
 function hide_lecture(){
@@ -55,7 +57,7 @@ function make_table(div,data,day,dayid){
 					td.appendChild(t);
 				}
 				if(dd.id!=null){
-					td.onclick=lecture_popup(dd.title,dd.lecturer,tm,data[0][j]===null?"":data[0][j],dayid+dd.id);
+					td.onclick=lecture_popup(dd.title,dd.lecturer,tm,data[0][j]===null?"":data[0][j].title,dayid+dd.id);
 					td.setAttribute("class","clickable");
 				}
 			}
