@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pandicon.gjk_symposion_2023_api.api_model.Table;
 import com.pandicon.gjk_symposion_2023_api.api_model.TableResponse;
+import org.javatuples.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -54,6 +55,8 @@ public class APIService {
     public void fetch_harmonogram() {
         System.out.println("Fetching harmonogram :D");
         this.last_harmonogram_cache_update = new Date().getTime();
+        TableAndAnnotationsParser table_and_annotations_parser = new TableAndAnnotationsParser(this.sheet_url);
+        Optional<Pair<String, Table>> data_opt = table_and_annotations_parser.get_data();
     }
     public ResponseEntity<String> get_test(Optional<Integer> id_opt, Optional<List<Integer>> ids_opt) {
         StringBuilder response = new StringBuilder();
