@@ -4,3 +4,25 @@ a{
 td{
 	border:1px solid black;
 }
+#ov_overlay{
+	position:fixed;
+	width:100vw;
+	height:100vh;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	z-index:900;
+	background:#000d;
+}
+#ov{
+	position:fixed;
+	width:90vw;
+	height:90vh;
+	left:5vw;
+	top:5vh;
+	background:#aff;
+	z-index:901;
+	overflow-y:scroll;
+	overscroll-behavior:contain;
+}
