@@ -3,7 +3,7 @@ const days=["Čtvrtek 16.11.","Pátek 17.11.","Sobota 18.11"];
 const dayids=["streda/","ctvrtek/","patek/"];
 function format_update(utct){
 	let d=new Date(utct*1000);
-	return d.getDate()+"."+d.getMonth()+". "+("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2)
+	return d.getDate()+"."+(d.getMonth()+1)+". "+("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2)
 }
 function lecture_popup(lec,title,time,room,id){
 	return async function(){
@@ -24,7 +24,7 @@ function hide_lecture(){
 }
 function make_table(div,data,day,dayid){
 	let tt=div.appendChild(document.createElement("h4"));
-	tt.setAttribute("class","day_title");
+	tt.classList.add("day_title");
 	tt.appendChild(document.createTextNode(day));
 	const table=div.appendChild(document.createElement("table"));
 	for(let i=0;i<data.length;i++){
@@ -42,23 +42,23 @@ function make_table(div,data,day,dayid){
 					td.setAttribute("colspan",dd.col_span);
 				}
 				let l=document.createElement("span");
-				l.setAttribute("class","lecturer");
+				l.classList.add("lecturer");
 				l.appendChild(document.createTextNode(dd.lecturer));
 				td.appendChild(l);
 				td.appendChild(document.createElement("br"));
 				let t=document.createElement("span");
-				t.setAttribute("class","lecture");
+				t.classList.add("lecture");
 				t.appendChild(document.createTextNode(dd.title));
 				td.appendChild(t);
 				if(dd.for_younger){
 					let t=document.createElement("span");
-					t.setAttribute("class","for_younger");
+					t.classList.add("for_younger");
 					t.appendChild(document.createTextNode("*"));
 					td.appendChild(t);
 				}
 				if(dd.id!=null){
 					td.onclick=lecture_popup(dd.title,dd.lecturer,tm,data[0][j]===null?"":data[0][j].title,dayid+dd.id);
-					td.setAttribute("class","clickable");
+					td.classList.add("clickable");
 				}
 			}
 		}
@@ -66,11 +66,17 @@ function make_table(div,data,day,dayid){
 }
 async function gen_tables(){
 	let tables_div=document.getElementById("harmonogram_tables");
+	while(tables_div.firstChild){
+		tables_div.removeChild(tables_div.lastChild);
+	}
 	const resp=await fetch(api+"harmonogram");
 	const data=await resp.json();
 	const hd=data.data.harmonogram;
 	for(let i=0;i<hd.length;i++){
 		make_table(tables_div,hd[i],days[i],dayids[i]);
 	}
+	let tu=tables_div.appendChild(document.createElement("span"));
+	tu.classList.add("last_update");
+	tu.textContent="data z "+format_update(data.data.last_updated);
 }
 gen_tables();
