@@ -116,7 +116,7 @@ if (!gl) {
 	const pattr=gl.getAttribLocation(sh,"vp");
 	gl.vertexAttribPointer(pattr,2,gl.FLOAT,false,0,0);
 	gl.enableVertexAttribArray(pattr);
-	const begin_t = new Date().getTime();
+	const begin_t = new Date().getTime()-Math.floor(Math.random()*1000000);
 	function render(){
 		canvas.width = window.innerWidth;
 		const time=new Date().getTime()-begin_t;
