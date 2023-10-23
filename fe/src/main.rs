@@ -23,7 +23,8 @@ pub async fn main() {
 	let main_css = include_str!("../html/main.css");
 	let main_js = include_str!("../html/main.js");
 	let timetable_js = include_str!("../html/harmonogram.js");
-	let icon = include_bytes!("../img/ico.png");
+	let title_img = include_bytes!("../img/title.png");
+	let icon_img = include_bytes!("../img/ico.png");
 
 	let root_html = insert_sections(base_html, &[intro_section, info_section, timetable_section, contacts_section]);
 	let root = warp::path::end().map(move || { warp::reply::html(root_html.clone()) });
@@ -32,8 +33,9 @@ pub async fn main() {
 	let css = warp::path("main.css").map(move || { warp::http::Response::builder().header("content-type", "text/css").body(main_css) });
 	let js = warp::path("main.js").map(move || { warp::http::Response::builder().header("content-type", "text/javascript").body(main_js) });
 	let tt_js = warp::path("harmonogram.js").map(move || { warp::http::Response::builder().header("content-type", "text/javascript").body(timetable_js) });
-	let icon = warp::path!("img" / "icon.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*icon)) });
-	let routes = warp::get().and(root.or(css).or(js).or(tt_js).or(icon).or(empty));
+	let title = warp::path!("img" / "title.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*title_img)) });
+	let icon = warp::path!("img" / "icon.png").map(move || { warp::http::Response::builder().header("content-type", "image/png").body(std::vec::Vec::from(*icon_img)) });
+	let routes = warp::get().and(root.or(css).or(js).or(tt_js).or(title).or(icon).or(empty));
 	let addr = ([127, 0, 0, 1], 3752);
 	println!("serving {}.{}.{}.{}:{}", addr.0[0], addr.0[1], addr.0[2], addr.0[3], addr.1);
 	warp::serve(routes).run(addr).await;
