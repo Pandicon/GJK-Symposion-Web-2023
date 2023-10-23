@@ -77,14 +77,14 @@ if (!gl) {
 		return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 	}
 	void main(){
-		float n=8.0*snoise(vec3(uv,tm))+4.0*snoise(vec3(uv*2.0,tm+1.0))+2.0*snoise(vec3(uv*4.0,tm+2.0));
+		float n=16.0*snoise(vec3(uv*.5,tm))+8.0*snoise(vec3(uv*1.0,tm+1.0))+4.0*snoise(vec3(uv*2.0,tm+2.0));
 		n=mod(n,1.0);
 		if(n<0.7){
 			gl_FragColor=vec4(1.0,1.0,1.0,1.0);
 		}else{
 			vec3 col1=vec3(0.53,0.46,0.68);
 			vec3 col2=vec3(0.21,0.12,0.37);
-			gl_FragColor=vec4(mix(col1,col2,sin(uv.x)*0.5+0.5),1.0);
+			gl_FragColor=vec4(mix(col1,col2,sin(uv.x+tm*20.0)*0.5+0.5),1.0);
 		}
 	}`;
 	function make_sh(tp,src) {
@@ -121,7 +121,7 @@ if (!gl) {
 		canvas.width = window.innerWidth;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
-		gl.uniform1f(gl.getUniformLocation(sh,"tm"),time*0.00001);
+		gl.uniform1f(gl.getUniformLocation(sh,"tm"),time*0.00002);
 		gl.uniform2f(gl.getUniformLocation(sh,"aspect"),canvas.width*0.01,canvas.height*0.01);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		setTimeout(function(){requestAnimationFrame(render);},20);
