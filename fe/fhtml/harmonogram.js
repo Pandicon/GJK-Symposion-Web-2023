@@ -20,7 +20,7 @@ function lecture_popup(lec,title,time,room,id){
 		document.getElementById("ov_annotation").textContent=data.data.info.annotation;
 		document.getElementById("ov_lecturer_info").textContent=data.data.info.lecturer_info;
 		document.getElementById("ov_last_update").textContent="data z "+format_update(data.data.last_updated);
-		window.history.pushState("","","/anotace/"+id);
+		window.history.pushState("","",urlbase+"/anotace/"+id);
 		window.onpopstate=function(e){hide_lecture();};
 	};
 }
@@ -32,7 +32,7 @@ function popup(a){
 }
 function hide_lecture(){
 	document.getElementById("lecture_popup").style.display="none";
-	window.history.pushState("","","/");
+	window.history.pushState("","",urlbase+"/");
 	window.onpopstate=null;
 }
 function make_table(div,data,day,dayid){

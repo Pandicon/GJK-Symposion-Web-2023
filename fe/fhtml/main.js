@@ -1,3 +1,10 @@
+function open_main_page(){
+	window.location="/";
+}
+function open_timetable(){
+	window.location="/harmonogram";
+}
+
 const canvas=document.getElementById("hbg_canvas");
 const gl = canvas.getContext("webgl");
 if (!gl) {
