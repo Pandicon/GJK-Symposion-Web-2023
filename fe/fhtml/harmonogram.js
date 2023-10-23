@@ -3,15 +3,29 @@ const days=["Čtvrtek 16.11.","Pátek 17.11.","Sobota 18.11"];
 const dayids=["streda/","ctvrtek/","patek/"];
 var tt_lkp={};
 var tt_ld=false;
+async function cfetch(url) {
+	let lst="T_"+url;
+	let t=Math.floor(new Date().getTime()/1000);
+	if(lst in localStorage){
+		if(t-localStorage[lst]<600) {
+			console.log("fetch to "+api+url+" was cached "+(t-localStorage[lst])+"s ago");
+			return JSON.parse(localStorage[url]);
+		}
+	}
+	console.log("fetching "+api+url);
+	let d=await fetch(api+url);
+	let o=await d.json();
+	localStorage[lst]=t;
+	localStorage[url]=JSON.stringify(o);
+	return o;
+}
 function format_update(utct){
 	let d=new Date(utct*1000);
 	return d.getDate()+"."+(d.getMonth()+1)+". "+("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2)
 }
 function lecture_popup(lec,title,time,room,id){
 	return async function(){
-		console.log("fetching "+api+"anotace/"+id);
-		const resp=await fetch(api+"anotace/"+id);
-		const data=await resp.json();
+		const data=await cfetch("anotace/"+id);
 		document.getElementById("lecture_popup").style.display="block";
 		document.getElementById("ov_lecturer").textContent=lec;
 		document.getElementById("ov_title").textContent=title;
@@ -84,9 +98,7 @@ async function gen_tables(){
 	while(tables_div.firstChild){
 		tables_div.removeChild(tables_div.lastChild);
 	}
-	console.log("fetching "+api+"harmonogram");
-	const resp=await fetch(api+"harmonogram");
-	const data=await resp.json();
+	const data=await cfetch("harmonogram");
 	const hd=data.data.harmonogram;
 	for(let i=0;i<hd.length;i++){
 		make_table(tables_div,hd[i],days[i],dayids[i]);
