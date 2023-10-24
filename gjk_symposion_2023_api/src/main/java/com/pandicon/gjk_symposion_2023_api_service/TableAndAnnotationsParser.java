@@ -26,11 +26,11 @@ class Lecture {
     public String lecturer_info;
     public boolean for_younger;
     public Lecture(String lecturer, String date, String place, String title, String annotation, String lecturer_info, String for_younger) throws Exception {
-        this.lecturer = lecturer;
-        this.place = place;
-        this.title = title;
-        this.annotation = annotation;
-        this.lecturer_info = lecturer_info;
+        this.lecturer = lecturer.strip();
+        this.place = place.strip();
+        this.title = title.strip();
+        this.annotation = annotation.strip();
+        this.lecturer_info = lecturer_info.strip();
         this.for_younger = for_younger.strip().equalsIgnoreCase("ano");
         String[] date_time = date.split(" \\| ");
         if(date_time.length < 2) {
