@@ -39,7 +39,7 @@ pub fn check_if_modified_since(mod_if_time : Option<String>) -> bool {
 		if let Ok(x) = (t[23..25]).parse::<u32>() { if x < crate::gen_routes::SECOND { return true } } else { return true; }
 		return false;
 	}
-	return true;
+	true
 }
 pub fn reply_cached() -> warp::http::Response<String> {
 	warp::http::Response::builder().status(304).body(String::new()).unwrap()
