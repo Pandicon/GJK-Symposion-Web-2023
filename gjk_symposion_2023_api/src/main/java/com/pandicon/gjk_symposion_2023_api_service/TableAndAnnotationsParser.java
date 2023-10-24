@@ -18,13 +18,14 @@ class Lecture {
     public String lecturer;
     public String day;
     public String date;
-    public String time;
+    public String starting_time;
+    public String ending_time;
     public String place;
     public String title;
     public String annotation;
     public String lecturer_info;
     public boolean for_younger;
-    public Lecture(String lecturer, String date, String place, String title, String annotation, String lecturer_info, String for_younger) {
+    public Lecture(String lecturer, String date, String place, String title, String annotation, String lecturer_info, String for_younger) throws Exception {
         this.lecturer = lecturer;
         this.place = place;
         this.title = title;
@@ -32,11 +33,22 @@ class Lecture {
         this.lecturer_info = lecturer_info;
         this.for_younger = for_younger.strip().equalsIgnoreCase("ano");
         String[] date_time = date.split(" \\| ");
+        if(date_time.length < 2) {
+            throw new Exception("Couldn't split day-date by |");
+        }
         String[] day_date = date_time[0].split(" ");
+        if(day_date.length < 2) {
+            throw new Exception("Couldn't split date-time by a space");
+        }
         this.day = day_date[0];
         this.date = day_date[1];
-        this.time = date_time[1];
-        System.out.println(this.day + " " + this.time);
+        String[] start_end = date_time[1].split("-");
+        if(start_end.length < 2) {
+            throw new Exception("Couldn't split start-end time by -");
+        }
+        this.starting_time = start_end[0].strip();
+        this.ending_time = start_end[1].strip();
+        System.out.println(this.day + " " + this.starting_time + " " + this.ending_time + " " + this.date);
     }
 }
 
@@ -83,6 +95,36 @@ public class TableAndAnnotationsParser {
             System.err.println("Failed to create connection: " + e);
             return Optional.empty();
         }
+    }
+
+    private Optional<Pair<String, Table>> handle_day(List<Lecture> day_lectures) {
+        /*
+         * For each day, go through all starting and ending times, saving them, then sort them (eliminating duplicates) ✔
+         * For each time, save it to a hashmap or something where it will have its index ✔
+         * For each day, sort it by the classroom
+         * Split each day into columns of lectures in the same classroom
+         * The row span of the lecture is index_of(ending_time) - index_of(starting_time)
+         * All spots between the starting and ending time are filled with null or something like that
+         * Build the first column out of the sorted times for each day
+         * Merge the columns into rows
+         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
+         * */
+        HashSet<String> start_end_times_hashset = new HashSet<>();
+        for(Lecture lecture : day_lectures) {
+            start_end_times_hashset.add(lecture.starting_time);
+            start_end_times_hashset.add(lecture.ending_time);
+        }
+        List<String> start_end_times = new ArrayList<>(start_end_times_hashset);
+        Collections.sort(start_end_times);
+        System.out.println("Times: " + start_end_times.toString());
+
+        HashMap<String, Integer> time_index = new HashMap<String, Integer>();
+        for(int i = 0; i < start_end_times.size(); i += 1) {
+            time_index.put(start_end_times.get(i), i);
+        }
+        System.out.println("Times and indexes: " + time_index);
+
+        return Optional.empty();
     }
 
     public Optional<Pair<String, Table>> get_data() {
@@ -163,14 +205,34 @@ public class TableAndAnnotationsParser {
         List<Lecture> all_lectures = new ArrayList<>();
         for(int i = 1; i < csv.size(); i += 1) {
             List<String> row = csv.get(i);
-            all_lectures.add(new Lecture(row.get(lecturer_i), row.get(time_i), row.get(place_i), row.get(title_i), row.get(annotation_i), row.get(lecturer_info_i), row.get(for_younger_i)));
+            System.out.println(row.get(time_i));
+            try {
+                Lecture lecture = new Lecture(row.get(lecturer_i), row.get(time_i), row.get(place_i), row.get(title_i), row.get(annotation_i), row.get(lecturer_info_i), row.get(for_younger_i));
+                all_lectures.add(lecture);
+            } catch (Exception e) {
+                e.printStackTrace(System.err);
+            }
         }
         all_lectures.sort(Comparator.comparing(lecture -> lecture.date));
+
+        List<List<Lecture>> lecture_days = new ArrayList<>();
+        String current_date = "";
         for(Lecture lecture : all_lectures) {
+            if(!Objects.equals(current_date, lecture.date)) {
+                lecture_days.add(new ArrayList<>());
+                current_date = lecture.date;
+            }
+            lecture_days.get(lecture_days.size() - 1).add(lecture);
             System.out.println(lecture.date + " " + lecture.day + " " + lecture.lecturer + " " + lecture.for_younger);
         }
+        System.out.println("Days separated: " + lecture_days.size());
+
+        for(List<Lecture> day : lecture_days) {
+            this.handle_day(day);
+        }
+
         /*
-        * Split into days
+        * Split into days ✔
         * For each day, sort it by the classroom
         * For each day, go through all starting and ending times, saving them, then sort them (eliminating duplicates)
         * For each time, save it to a hashmap or something where it will have its index
