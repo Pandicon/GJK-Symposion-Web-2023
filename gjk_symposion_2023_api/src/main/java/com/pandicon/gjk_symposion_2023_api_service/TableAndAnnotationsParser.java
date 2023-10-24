@@ -48,15 +48,17 @@ class Lecture {
         }
         this.starting_time = start_end[0].strip();
         this.ending_time = start_end[1].strip();
-        System.out.println(this.day + " " + this.starting_time + " " + this.ending_time + " " + this.date);
+        System.out.println(this.day + " " + this.starting_time + " " + this.ending_time + " " + this.date + " |" + this.lecturer + "| " + this.title);
     }
 }
 
 public class TableAndAnnotationsParser {
     private final String data_url;
+    private final String cell_content_to_be_considered_empty;
 
-    public TableAndAnnotationsParser(final String i_data_url) {
+    public TableAndAnnotationsParser(final String i_data_url, final String i_cell_content_to_be_considered_empty) {
         this.data_url = i_data_url;
+        this.cell_content_to_be_considered_empty = i_cell_content_to_be_considered_empty;
     }
 
     private Optional<List<List<String>>> read_csv(String input) {
@@ -65,7 +67,15 @@ public class TableAndAnnotationsParser {
         String[] nextLine;
         try {
             while ((nextLine = reader.readNext()) != null) {
-                records.add(List.of(nextLine));
+                List<String> record = new ArrayList<>();
+                for(String cell : nextLine) {
+                    if(cell.strip().equals(this.cell_content_to_be_considered_empty)) {
+                        record.add("");
+                    } else {
+                        record.add(cell);
+                    }
+                }
+                records.add(record);
             }
             return Optional.of(records);
         } catch (Exception e) {

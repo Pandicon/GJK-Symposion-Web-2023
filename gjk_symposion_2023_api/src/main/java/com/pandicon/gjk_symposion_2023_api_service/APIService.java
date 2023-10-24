@@ -17,6 +17,7 @@ import java.util.*;
 
 class Settings {
     public long cache_refresh_cooldown_ms;
+    public String cell_content_to_be_considered_empty;
     public String sheet_url;
 }
 
@@ -25,6 +26,7 @@ public class APIService {
     private long last_harmonogram_cache_update;
     private List<Table> harmonogram_cache;
     final private String sheet_url;
+    final private String cell_content_to_be_considered_empty;
     final private long cache_refresh_cooldown_ms;
     public APIService() {
         last_harmonogram_cache_update = 0;
@@ -43,6 +45,7 @@ public class APIService {
             try {
                 Settings settings = mapper.readValue(settings_file.toString(), Settings.class);
                 this.sheet_url = settings.sheet_url;
+                this.cell_content_to_be_considered_empty = settings.cell_content_to_be_considered_empty;
                 this.cache_refresh_cooldown_ms = settings.cache_refresh_cooldown_ms;
             } catch (JsonProcessingException e) {
                 throw new RuntimeException("Failed to parse the settings JSON file: \n" + e);
@@ -55,7 +58,7 @@ public class APIService {
     public void fetch_harmonogram() {
         System.out.println("Fetching harmonogram :D");
         this.last_harmonogram_cache_update = new Date().getTime();
-        TableAndAnnotationsParser table_and_annotations_parser = new TableAndAnnotationsParser(this.sheet_url);
+        TableAndAnnotationsParser table_and_annotations_parser = new TableAndAnnotationsParser(this.sheet_url, this.cell_content_to_be_considered_empty);
         Optional<Pair<String, Table>> data_opt = table_and_annotations_parser.get_data();
     }
     public ResponseEntity<String> get_test(Optional<Integer> id_opt, Optional<List<Integer>> ids_opt) {
