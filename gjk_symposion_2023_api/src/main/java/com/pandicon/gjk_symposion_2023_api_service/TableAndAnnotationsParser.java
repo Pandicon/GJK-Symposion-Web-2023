@@ -1,6 +1,7 @@
 package com.pandicon.gjk_symposion_2023_api_service;
 
 import com.pandicon.gjk_symposion_2023_api.api_model.Table;
+import com.pandicon.gjk_symposion_2023_api.api_model.TableCell;
 import org.javatuples.Pair;
 
 import java.io.IOException;
@@ -107,16 +108,16 @@ public class TableAndAnnotationsParser {
         }
     }
 
-    private Optional<Pair<String, Table>> handle_day(List<Lecture> day_lectures) {
+    private Optional<Pair<String, Table>> handle_day(int day_id, String date, List<Lecture> day_lectures, List<String> rooms, HashMap<String, String> rooms_annotations) {
         /*
          * For each day, go through all starting and ending times, saving them, then sort them (eliminating duplicates) ✔
          * For each time, save it to a hashmap or something where it will have its index ✔
-         * For each day, sort it by the classroom
-         * Split each day into columns of lectures in the same classroom
-         * The row span of the lecture is index_of(ending_time) - index_of(starting_time)
-         * All spots between the starting and ending time are filled with null or something like that
-         * Build the first column out of the sorted times for each day
-         * Merge the columns into rows
+         * For each day, sort it by the classroom ✔
+         * Split each day into columns of lectures in the same classroom ✔
+         * The row span of the lecture is index_of(ending_time) - index_of(starting_time) ✔
+         * All spots between the starting and ending time are filled with null or something like that ✔
+         * Build the first column out of the sorted times for each day ✔
+         * Merge the columns into rows ✔
          * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
          * */
         HashSet<String> start_end_times_hashset = new HashSet<>();
@@ -134,10 +135,86 @@ public class TableAndAnnotationsParser {
         }
         System.out.println("Times and indexes: " + time_index);
 
-        return Optional.empty();
+        day_lectures.sort(Comparator.comparing(lecture -> lecture.place));
+        List<List<Lecture>> day_lectures_by_classroom = new ArrayList<>();
+        String current_room = "";
+        HashSet<String> day_used_rooms = new HashSet<>();
+        for(Lecture lecture : day_lectures) {
+            if(!Objects.equals(current_room, lecture.place)) {
+                current_room = lecture.place;
+                day_used_rooms.add(current_room);
+                day_lectures_by_classroom.add(new ArrayList<>());
+            }
+            day_lectures_by_classroom.get(day_lectures_by_classroom.size() - 1).add(lecture);
+        }
+        for (List<Lecture> lectures : day_lectures_by_classroom) {
+            lectures.sort(Comparator.comparing(l_lecture -> l_lecture.starting_time));
+        }
+        int index = 0;
+        HashMap<String, Integer> room_to_column = new HashMap<>();
+        List<String> used_rooms = new ArrayList<>();
+        for(String room : rooms) {
+            if(day_used_rooms.contains(room)) {
+                index += 1;
+                room_to_column.put(room, index);
+                used_rooms.add(room);
+            }
+        }
+        System.out.println("Lectures are divided into " + day_lectures_by_classroom.size() + " different rooms");
+        System.out.println(room_to_column.toString());
+
+        HashMap<String, List<Optional<Lecture>>> raw_rooms_columns = new HashMap<>();
+        for(List<Lecture> room_lectures : day_lectures_by_classroom){
+            List<Optional<Lecture>> column = new ArrayList<>();
+            for(int i = 0; i < start_end_times.size() - 1; i += 1) {
+                column.add(Optional.empty());
+            }
+            for(Lecture lecture : room_lectures) {
+                column.set(time_index.get(lecture.starting_time), Optional.of(lecture));
+            }
+            raw_rooms_columns.put(room_lectures.get(0).place, column);
+        }
+        List<List<Optional<TableCell>>> table_columns = new ArrayList<>();
+        table_columns.add(new ArrayList<>());
+        for(String time : start_end_times) {
+            table_columns.get(0).add(Optional.of(new TableCell("", time, false, Optional.empty(), 1, 1)));
+        }
+        int c = 1;
+        for(String room : used_rooms) {
+            List<Optional<Lecture>> room_column = raw_rooms_columns.get(room);
+            List<Optional<TableCell>> column = new ArrayList<>();
+            column.add(Optional.of(new TableCell("", room, false, Optional.of(day_id + "-0-" + c), 1, 1))); // TODO: Save annotations by id
+            int r = 1;
+            for(Optional<Lecture> lecture_opt : room_column) {
+                if(lecture_opt.isEmpty()) {
+                    column.add(Optional.empty());
+                    continue;
+                }
+                Lecture lecture = lecture_opt.get();
+                Optional<String> cell_id = Optional.empty();
+                if(!lecture.annotation.isEmpty()) {
+                    cell_id = Optional.of(day_id + "-" + r + "-" + c);
+                }
+                int row_span = time_index.get(lecture.ending_time) - time_index.get(lecture.starting_time);
+                column.add(Optional.of(new TableCell(lecture.lecturer, lecture.title, lecture.for_younger, cell_id, row_span, 1))); // TODO: Save annotations by id
+                r += 1;
+            }
+            table_columns.add(column);
+            c += 1;
+        }
+        List<List<Optional<TableCell>>> table_rows = new ArrayList<>();
+        for(int i = 0; i < start_end_times.size(); i += 1) {
+            List<Optional<TableCell>> row = new ArrayList<>();
+            for(List<Optional<TableCell>> column : table_columns) {
+                row.add(column.get(i));
+            }
+            table_rows.add(row);
+        }
+
+        return Optional.of(Pair.with("Hiiii", new Table(date, table_rows)));
     }
 
-    public Optional<Pair<String, Table>> get_data() {
+    public Optional<Pair<String, List<Table>>> get_data() {
         final Optional<String> csv_data_opt = this.load_data();
         if(csv_data_opt.isEmpty()) {
             System.out.println("Failed to get the sheet.");
@@ -204,10 +281,12 @@ public class TableAndAnnotationsParser {
         }
         System.out.println(csv.get(0).get(top_row_fields - 1) + " " + csv.get(0).get(room_annotations_start) + " " + csv.get(0).get(room_annotations_start + room_annotations - 1) + " " + room_annotations_start + " " + room_annotations);
         List<String> rooms = new ArrayList<>();
-        List<String> rooms_annotations = new ArrayList<>();
+        HashMap<String, String> rooms_annotations = new HashMap<>();
+        HashMap<String, Integer> room_to_column = new HashMap<>();
         for(int i = room_annotations_start; i < room_annotations_start + room_annotations; i += 1) {
             rooms.add(csv.get(0).get(i));
-            rooms_annotations.add(csv.get(1).get(i));
+            room_to_column.put(csv.get(0).get(i), i - room_annotations_start);
+            rooms_annotations.put(csv.get(0).get(i), csv.get(1).get(i));
         }
         System.out.println(rooms.toString() + " " + rooms_annotations.toString());
         System.out.println(lecturer_i + " " + time_i + " " + place_i + " " + title_i + " " + annotation_i + " " + lecturer_info_i + " " + for_younger_i);
@@ -227,18 +306,27 @@ public class TableAndAnnotationsParser {
 
         List<List<Lecture>> lecture_days = new ArrayList<>();
         String current_date = "";
+        List<String> dates = new ArrayList<>();
         for(Lecture lecture : all_lectures) {
             if(!Objects.equals(current_date, lecture.date)) {
                 lecture_days.add(new ArrayList<>());
                 current_date = lecture.date;
+                dates.add(current_date);
             }
             lecture_days.get(lecture_days.size() - 1).add(lecture);
             System.out.println(lecture.date + " " + lecture.day + " " + lecture.lecturer + " " + lecture.for_younger);
         }
         System.out.println("Days separated: " + lecture_days.size());
 
-        for(List<Lecture> day : lecture_days) {
-            this.handle_day(day);
+        List<Table> tables = new ArrayList<>();
+        for(int i = 0; i < lecture_days.size(); i += 1) {
+            Optional<Pair<String, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
+            if(pair_opt.isEmpty()) {
+                System.err.println("Failed to parse table for day " + dates.get(i));
+                return Optional.empty();
+            }
+            Pair<String, Table> pair = pair_opt.get();
+            tables.add(pair.getValue1());
         }
 
         /*
@@ -254,6 +342,6 @@ public class TableAndAnnotationsParser {
         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
         * */
 
-        return Optional.empty();
+        return Optional.of(Pair.with("Hiii", tables));
     }
 }

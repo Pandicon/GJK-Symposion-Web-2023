@@ -59,7 +59,13 @@ public class APIService {
         System.out.println("Fetching harmonogram :D");
         this.last_harmonogram_cache_update = new Date().getTime();
         TableAndAnnotationsParser table_and_annotations_parser = new TableAndAnnotationsParser(this.sheet_url, this.cell_content_to_be_considered_empty);
-        Optional<Pair<String, Table>> data_opt = table_and_annotations_parser.get_data();
+        Optional<Pair<String, List<Table>>> data_opt = table_and_annotations_parser.get_data();
+        if(data_opt.isEmpty()) {
+            System.err.println("Failed to get table data");
+            return;
+        }
+        Pair<String, List<Table>> data = data_opt.get();
+        this.harmonogram_cache = data.getValue1();
     }
     public ResponseEntity<String> get_test(Optional<Integer> id_opt, Optional<List<Integer>> ids_opt) {
         StringBuilder response = new StringBuilder();
