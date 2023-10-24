@@ -77,7 +77,10 @@ if (!gl) {
 		return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 	}
 	void main(){
-		float n=16.0*snoise(vec3(uv*.5,tm))+8.0*snoise(vec3(uv*1.0,tm+1.0))+4.0*snoise(vec3(uv*2.0,tm+2.0));
+		float n=32.0*snoise(vec3(uv*.25,tm+7.0))+
+			16.0*snoise(vec3(uv*.5,tm))+
+			8.0*snoise(vec3(uv*1.0,tm+1.0))+
+			4.0*snoise(vec3(uv*2.0,tm+2.0));
 		n=mod(n,1.0);
 		if(n<0.7){
 			gl_FragColor=vec4(1.0,1.0,1.0,1.0);
@@ -116,12 +119,12 @@ if (!gl) {
 	const pattr=gl.getAttribLocation(sh,"vp");
 	gl.vertexAttribPointer(pattr,2,gl.FLOAT,false,0,0);
 	gl.enableVertexAttribArray(pattr);
-	const begin_t = new Date().getTime()-Math.floor(Math.random()*1000000);
+	const begin_t = new Date().getTime()-Math.floor(Math.random()*100000000);
 	function render(){
 		canvas.width = document.body.clientWidth;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
-		gl.uniform1f(gl.getUniformLocation(sh,"tm"),time*0.00002);
+		gl.uniform1f(gl.getUniformLocation(sh,"tm"),time*0.000015);
 		gl.uniform2f(gl.getUniformLocation(sh,"aspect"),canvas.width*0.01,canvas.height*0.01);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		setTimeout(function(){requestAnimationFrame(render);},20);
