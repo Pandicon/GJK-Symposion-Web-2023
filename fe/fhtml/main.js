@@ -26,6 +26,8 @@ if (!gl) {
 	}`;
 	const fssrc=`precision mediump float;
 	varying vec2 uv;
+	uniform vec2 mp;
+	uniform float ms;
 	uniform float tm;
 
 	/* https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83 */
@@ -81,6 +83,8 @@ if (!gl) {
 			16.0*snoise(vec3(uv*.5,tm))+
 			8.0*snoise(vec3(uv*1.0,tm+1.0))+
 			4.0*snoise(vec3(uv*2.0,tm+2.0));
+		vec2 rp=(uv-mp)/ms;
+		n=mix(n,4.0*ms+8.0,exp(-dot(rp,rp)));
 		n=mod(n,1.0);
 		if(n<0.7){
 			gl_FragColor=vec4(1.0,1.0,1.0,1.0);
@@ -119,15 +123,27 @@ if (!gl) {
 	const pattr=gl.getAttribLocation(sh,"vp");
 	gl.vertexAttribPointer(pattr,2,gl.FLOAT,false,0,0);
 	gl.enableVertexAttribArray(pattr);
-	const begin_t = new Date().getTime()-Math.floor(Math.random()*100000000);
+	const begin_t = new Date().getTime()-Math.floor(Math.random()*100000);
+	let tm_loc=gl.getUniformLocation(sh,"tm");
+	let asp_loc=gl.getUniformLocation(sh,"aspect");
+	let mp_loc=gl.getUniformLocation(sh,"mp");
+	let ms_loc=gl.getUniformLocation(sh,"ms");
+	document.onmousemove=function(e){
+		gl.uniform2f(mp_loc,e.clientX*0.01,1-e.clientY*0.01);
+	};
+	var ms=0.1,tms=0.3;
+	document.onmousedown=function(){tms=1.3;};
+	document.onmouseup=function(){tms=0.3;};
 	function render(){
 		canvas.width = document.body.clientWidth;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
-		gl.uniform1f(gl.getUniformLocation(sh,"tm"),time*0.000015);
-		gl.uniform2f(gl.getUniformLocation(sh,"aspect"),canvas.width*0.01,canvas.height*0.01);
+		ms=(tms+ms)*0.5;
+		gl.uniform1f(ms_loc,ms);
+		gl.uniform1f(tm_loc,time*0.00001);
+		gl.uniform2f(asp_loc,canvas.width*0.01,canvas.height*0.01);
 		gl.drawArrays(gl.TRIANGLES,0,6);
-		setTimeout(function(){requestAnimationFrame(render);},20);
-	}
+		setTimeout(function(){requestAnimationFrame(render);},50);
+	};
 	requestAnimationFrame(render);
 }

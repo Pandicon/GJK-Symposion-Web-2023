@@ -61,7 +61,7 @@ function make_table(div,data,day,dayid){
 		const tm=day+" "+(dr[0]===null?"":dr[0].title);
 		for(let j=0;j<dr.length;j++){
 			const dd=dr[j];
-			const td=tr.insertCell();
+			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
 			if(dd!==null){
 				if("row_span"in dd){
 					td.setAttribute("rowspan",dd.row_span);
@@ -85,7 +85,7 @@ function make_table(div,data,day,dayid){
 					td.appendChild(t);
 				}
 				if(dd.id!=null){
-					td.onclick=lecture_popup(dd.title,dd.lecturer,tm,data[0][j]===null?"":data[0][j].title,dayid+dd.id);
+					td.onclick=lecture_popup(dd.lecturer,dd.title,tm,data[0][j]===null?"":data[0][j].title,dayid+dd.id);
 					td.classList.add("clickable");
 					tt_lkp[dayid+dd.id]=td.onclick;
 				}
