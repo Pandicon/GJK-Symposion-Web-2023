@@ -23,11 +23,11 @@ fn cached_ep(routes : &mut std::vec::Vec<&'static str>, epid : &'static str, ep 
 fn cached_ep_annot(routes : &mut std::vec::Vec<&'static str>, epid : &'static str, ep : &str, ct : &str, val : &str, args : &str) -> String {
 	routes.push(epid);
 	let code1 = String::from("{\n\t\tif utils::check_if_modified_since(modified) {\n\t\t\tcached_response_t(")+ct+").body(utils::insert_annoation_autopopup(&"+epid+
-		"_adata, &dayid, &id)).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached()\n\t\t}\n\t}";
+		"_adata, &id)).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached()\n\t\t}\n\t}";
 	let code2 = String::from("{\n\t\tif utils::check_if_modified_since(modified) {\n\t\t\tcached_response_t(")+ct+").body("+epid+
 		"_data.clone()).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached()\n\t\t}\n\t}";
 	format!("\tlet {}_data = {};\n\tlet {}_adata = {}_data.clone();\n\
-		\tlet {}_route = warp::path!({}\"anotace\" / String / String).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}dayid : String, id : String, modified : Option<String>| {}).or(\
+		\tlet {}_route = warp::path!({}\"anotace\" / String).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}id : String, modified : Option<String>| {}).or(\
 		warp::path!({}).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}modified : Option<String>| {}));\n",
 		epid, val, epid, epid, epid, if ep.is_empty() { String::from("") } else { String::from(ep)+" / " }, args, code1, ep, args, code2)
 }
