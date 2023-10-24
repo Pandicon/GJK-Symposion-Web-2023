@@ -5,10 +5,26 @@ a{
 body{
 	margin:0;
 	padding:0;
+	background-color:#eee7fd;
 }
 main{
 	margin:10px;
 }
+
+h3{
+	font-size:3em;
+	margin:20px;
+}
+h4{
+	font-size:2.5em;
+	margin:20px;
+}
+
+#uvod{
+	text-align:center;
+	font-size:3em;
+}
+
 #ov_overlay{
 	position:fixed;
 	width:100vw;
@@ -26,11 +42,54 @@ main{
 	height:90vh;
 	left:5vw;
 	top:5vh;
-	background:#aff;
+	background:#cdbeed;
 	z-index:901;
 	overflow-y:scroll;
 	overscroll-behavior:contain;
 }
+#ov_lecturer{
+	text-align:center;
+	font-style:bold;
+	font-size:2.5em;
+	margin-bottom:10px;
+}
+#ov_title{
+	text-align:center;
+	font-style:bold;
+	font-size:2em;
+	margin-bottom:5px;
+	margin-left:80px;
+	margin-right:80px;
+}
+#ov_time{
+	display:inline;
+	margin-right:20px;
+	font-style:italic;
+}
+#ov_room{
+	display:inline;
+	margin-right:20px;
+}
+#ov_annotation{
+	margin-top:25px;
+}
+#ov_lecturer_info{
+	font-style:italic;
+}
+#ov_last_update{
+	font-style:italic;
+	font-size:0.7em;
+}
+#ov_back{
+	display:inline;
+	position:absolute;
+	top:10px;
+	right:10px;
+	padding:20px;
+	font-style:bold;
+	border:3px solid #361F5F;
+}
+
 header{
 	position:fixed;
 	width:100%;
@@ -55,7 +114,7 @@ header{
 }
 nav{
 	background-color:white;
-	border-bottom:1px solid black;
+	border-bottom:1px solid #361F5F;
 	height:20px;
 }
 nav a{
@@ -65,10 +124,14 @@ nav a{
 .header_pad{
 	height:120px;
 }
+
 #o_akci,#harmonogram,#kontakty{
 	scroll-margin-top: 120px;
 }
-#harmonogram td,#harmonogram tr,#harmonogram table{
-	border:1px solid #8775AE;
-	border-collapse:collapse;
+#harmonogram td{
+	/*border:1px solid #8775AE;*/
+	background-color:#ffffffa0;
+}
+#harmonogram table{
+	border-spacing:5px;
 }
