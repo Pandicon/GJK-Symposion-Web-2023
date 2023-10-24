@@ -1,5 +1,6 @@
 package com.pandicon.gjk_symposion_2023_api_service;
 
+import com.pandicon.gjk_symposion_2023_api.api_model.AdditionalData;
 import com.pandicon.gjk_symposion_2023_api.api_model.Table;
 import com.pandicon.gjk_symposion_2023_api.api_model.TableCell;
 import org.javatuples.Pair;
@@ -108,7 +109,7 @@ public class TableAndAnnotationsParser {
         }
     }
 
-    private Optional<Pair<HashMap<String, String>, Table>> handle_day(int day_id, String date, List<Lecture> day_lectures, List<String> rooms, HashMap<String, String> rooms_annotations) {
+    private Optional<Pair<HashMap<String, AdditionalData>, Table>> handle_day(int day_id, String date, List<Lecture> day_lectures, List<String> rooms, HashMap<String, String> rooms_annotations) {
         /*
          * For each day, go through all starting and ending times, saving them, then sort them (eliminating duplicates) ✔
          * For each time, save it to a hashmap or something where it will have its index ✔
@@ -179,14 +180,14 @@ public class TableAndAnnotationsParser {
         for(String time : start_end_times) {
             table_columns.get(0).add(Optional.of(new TableCell("", time, false, Optional.empty(), 1, 1)));
         }
-        HashMap<String, String> annotations = new HashMap<>();
+        HashMap<String, AdditionalData> annotations = new HashMap<>();
         int c = 1;
         for(String room : used_rooms) {
             List<Optional<Lecture>> room_column = raw_rooms_columns.get(room);
             List<Optional<TableCell>> column = new ArrayList<>();
             String c_id = day_id + "-0-" + c;
             column.add(Optional.of(new TableCell("", room, false, Optional.of(c_id), 1, 1)));
-            annotations.put(c_id, rooms_annotations.get(room));
+            annotations.put(c_id, new AdditionalData(c_id, rooms_annotations.get(room), ""));
             int r = 1;
             for(Optional<Lecture> lecture_opt : room_column) {
                 if(lecture_opt.isEmpty()) {
@@ -198,7 +199,7 @@ public class TableAndAnnotationsParser {
                 if(!lecture.annotation.isEmpty()) {
                     String id = day_id + "-" + r + "-" + c;
                     cell_id = Optional.of(id);
-                    annotations.put(id, lecture.annotation);
+                    annotations.put(id, new AdditionalData(id, lecture.annotation, lecture.lecturer_info));
                 }
                 int row_span = time_index.get(lecture.ending_time) - time_index.get(lecture.starting_time);
                 column.add(Optional.of(new TableCell(lecture.lecturer, lecture.title, lecture.for_younger, cell_id, row_span, 1)));
@@ -219,7 +220,7 @@ public class TableAndAnnotationsParser {
         return Optional.of(Pair.with(annotations, new Table(date, table_rows)));
     }
 
-    public Optional<Pair<List<HashMap<String, String>>, List<Table>>> get_data() {
+    public Optional<Pair<List<HashMap<String, AdditionalData>>, List<Table>>> get_data() {
         final Optional<String> csv_data_opt = this.load_data();
         if(csv_data_opt.isEmpty()) {
             System.out.println("Failed to get the sheet.");
@@ -324,14 +325,14 @@ public class TableAndAnnotationsParser {
         System.out.println("Days separated: " + lecture_days.size());
 
         List<Table> tables = new ArrayList<>();
-        List<HashMap<String, String>> annotations = new ArrayList<>();
+        List<HashMap<String, AdditionalData>> annotations = new ArrayList<>();
         for(int i = 0; i < lecture_days.size(); i += 1) {
-            Optional<Pair<HashMap<String, String>, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
+            Optional<Pair<HashMap<String, AdditionalData>, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
             if(pair_opt.isEmpty()) {
                 System.err.println("Failed to parse table for day " + dates.get(i));
                 return Optional.empty();
             }
-            Pair<HashMap<String, String>, Table> pair = pair_opt.get();
+            Pair<HashMap<String, AdditionalData>, Table> pair = pair_opt.get();
             tables.add(pair.getValue1());
             annotations.add(pair.getValue0());
         }

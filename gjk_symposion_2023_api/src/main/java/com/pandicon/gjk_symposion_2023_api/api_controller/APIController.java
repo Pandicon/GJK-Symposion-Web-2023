@@ -31,4 +31,9 @@ public class APIController {
     public ResponseEntity<Map<String, Object>> get_harmonogram(@RequestParam Optional<List<Integer>> days) {
         return api_service.get_harmonogram(days);
     }
+
+    @GetMapping("/annotations")
+    public ResponseEntity<Map<String, Object>> get_annotations(@RequestParam Optional<List<Integer>> days, @RequestParam Optional<List<String>> ids) {
+        return api_service.get_annotations(days, ids);
+    }
 }
