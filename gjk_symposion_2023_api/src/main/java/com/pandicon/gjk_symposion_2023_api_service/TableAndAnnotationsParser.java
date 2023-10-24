@@ -108,7 +108,7 @@ public class TableAndAnnotationsParser {
         }
     }
 
-    private Optional<Pair<String, Table>> handle_day(int day_id, String date, List<Lecture> day_lectures, List<String> rooms, HashMap<String, String> rooms_annotations) {
+    private Optional<Pair<HashMap<String, String>, Table>> handle_day(int day_id, String date, List<Lecture> day_lectures, List<String> rooms, HashMap<String, String> rooms_annotations) {
         /*
          * For each day, go through all starting and ending times, saving them, then sort them (eliminating duplicates) ✔
          * For each time, save it to a hashmap or something where it will have its index ✔
@@ -118,7 +118,7 @@ public class TableAndAnnotationsParser {
          * All spots between the starting and ending time are filled with null or something like that ✔
          * Build the first column out of the sorted times for each day ✔
          * Merge the columns into rows ✔
-         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
+         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id ✔
          * */
         HashSet<String> start_end_times_hashset = new HashSet<>();
         for(Lecture lecture : day_lectures) {
@@ -179,11 +179,14 @@ public class TableAndAnnotationsParser {
         for(String time : start_end_times) {
             table_columns.get(0).add(Optional.of(new TableCell("", time, false, Optional.empty(), 1, 1)));
         }
+        HashMap<String, String> annotations = new HashMap<>();
         int c = 1;
         for(String room : used_rooms) {
             List<Optional<Lecture>> room_column = raw_rooms_columns.get(room);
             List<Optional<TableCell>> column = new ArrayList<>();
-            column.add(Optional.of(new TableCell("", room, false, Optional.of(day_id + "-0-" + c), 1, 1))); // TODO: Save annotations by id
+            String c_id = day_id + "-0-" + c;
+            column.add(Optional.of(new TableCell("", room, false, Optional.of(c_id), 1, 1)));
+            annotations.put(c_id, rooms_annotations.get(room));
             int r = 1;
             for(Optional<Lecture> lecture_opt : room_column) {
                 if(lecture_opt.isEmpty()) {
@@ -193,10 +196,12 @@ public class TableAndAnnotationsParser {
                 Lecture lecture = lecture_opt.get();
                 Optional<String> cell_id = Optional.empty();
                 if(!lecture.annotation.isEmpty()) {
-                    cell_id = Optional.of(day_id + "-" + r + "-" + c);
+                    String id = day_id + "-" + r + "-" + c;
+                    cell_id = Optional.of(id);
+                    annotations.put(id, lecture.annotation);
                 }
                 int row_span = time_index.get(lecture.ending_time) - time_index.get(lecture.starting_time);
-                column.add(Optional.of(new TableCell(lecture.lecturer, lecture.title, lecture.for_younger, cell_id, row_span, 1))); // TODO: Save annotations by id
+                column.add(Optional.of(new TableCell(lecture.lecturer, lecture.title, lecture.for_younger, cell_id, row_span, 1)));
                 r += 1;
             }
             table_columns.add(column);
@@ -211,10 +216,10 @@ public class TableAndAnnotationsParser {
             table_rows.add(row);
         }
 
-        return Optional.of(Pair.with("Hiiii", new Table(date, table_rows)));
+        return Optional.of(Pair.with(annotations, new Table(date, table_rows)));
     }
 
-    public Optional<Pair<String, List<Table>>> get_data() {
+    public Optional<Pair<List<HashMap<String, String>>, List<Table>>> get_data() {
         final Optional<String> csv_data_opt = this.load_data();
         if(csv_data_opt.isEmpty()) {
             System.out.println("Failed to get the sheet.");
@@ -319,14 +324,16 @@ public class TableAndAnnotationsParser {
         System.out.println("Days separated: " + lecture_days.size());
 
         List<Table> tables = new ArrayList<>();
+        List<HashMap<String, String>> annotations = new ArrayList<>();
         for(int i = 0; i < lecture_days.size(); i += 1) {
-            Optional<Pair<String, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
+            Optional<Pair<HashMap<String, String>, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
             if(pair_opt.isEmpty()) {
                 System.err.println("Failed to parse table for day " + dates.get(i));
                 return Optional.empty();
             }
-            Pair<String, Table> pair = pair_opt.get();
+            Pair<HashMap<String, String>, Table> pair = pair_opt.get();
             tables.add(pair.getValue1());
+            annotations.add(pair.getValue0());
         }
 
         /*
@@ -342,6 +349,6 @@ public class TableAndAnnotationsParser {
         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
         * */
 
-        return Optional.of(Pair.with("Hiii", tables));
+        return Optional.of(Pair.with(annotations, tables));
     }
 }
