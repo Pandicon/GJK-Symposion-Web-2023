@@ -1,4 +1,4 @@
-const api="https://api.simp.klubkepler.eu/";
+const api="http://127.0.0.1:3976/";/*"https://api.simp.klubkepler.eu/";*/
 const days=["Čtvrtek 16.11.","Pátek 17.11.","Sobota 18.11"];
 const dayids=["streda/","ctvrtek/","patek/"];
 var tt_lkp={};
@@ -20,7 +20,7 @@ async function cfetch(url) {
 	return o;
 }
 function format_update(utct){
-	let d=new Date(utct*1000);
+	let d=new Date(utct);
 	return d.getDate()+"."+(d.getMonth()+1)+". "+("00"+d.getHours()).slice(-2)+":"+("00"+d.getMinutes()).slice(-2)+":"+("00"+d.getSeconds()).slice(-2)
 }
 function lecture_popup(lec,title,time,room,id){
@@ -62,12 +62,13 @@ function make_table(div,data,day,dayid){
 		for(let j=0;j<dr.length;j++){
 			const dd=dr[j];
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
+			if(j==0){td.classList.add("time");}
 			if(dd!==null){
-				if("row_span"in dd){
-					td.setAttribute("rowspan",dd.row_span);
+				if("rowspan"in dd){
+					td.setAttribute("rowspan",dd.rowspan);
 				}
-				if("col_span"in dd){
-					td.setAttribute("colspan",dd.col_span);
+				if("colspan"in dd){
+					td.setAttribute("colspan",dd.colspan);
 				}
 				let l=document.createElement("span");
 				l.classList.add("lecturer");
@@ -101,7 +102,7 @@ async function gen_tables(){
 	const data=await cfetch("harmonogram");
 	const hd=data.data.harmonogram;
 	for(let i=0;i<hd.length;i++){
-		make_table(tables_div,hd[i],days[i],dayids[i]);
+		make_table(tables_div,hd[i].harmonogram,days[i],dayids[i]);
 	}
 	let tu=tables_div.appendChild(document.createElement("span"));
 	tu.classList.add("last_update");
