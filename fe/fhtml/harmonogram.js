@@ -12,10 +12,23 @@ async function cfetch(url) {
 		}
 	}
 	console.log("fetching "+api+url);
-	let d=await fetch(api+url);
-	let o=await d.json();
-	localStorage[lst]=t;
-	localStorage[url]=JSON.stringify(o);
+	let o=await(fetch(api+url).then((r)=>{
+		if(r.ok){
+			return r.json();
+		}
+		throw new Error("fetch_error");
+	}).then((o)=>{
+		localStorage[lst]=t;
+		localStorage[url]=JSON.stringify(o);
+		return o;
+	}).catch((e)=>{
+		console.error("net_error: "+e);
+		if(lst in localStorage){
+			console.log("fallback to cache "+api+url+" from "+(t-localStorage[lst])+"s ago");
+			return JSON.parse(localStorage[url]);
+		}
+		return null;
+	}));
 	return o;
 }
 function format_update(utct){
@@ -63,7 +76,7 @@ function make_table(div,data,dayid){
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
 			if(j==0){td.classList.add("time");}
 			if(dd!==null){
-				const tm = tmb + ((!("rowspan" in dd) || i === 0)?"":(data[i+dd.rowspan-1][0]==null?"":(" - " + data[i+dd.rowspan-1][0].title)));
+				const tm=tmb+((!("rowspan"in dd)||i===0)?"":(data[i+dd.rowspan-1][0]==null?"":(" - "+data[i+dd.rowspan-1][0].title)));
 				if("rowspan"in dd){
 					td.setAttribute("rowspan",dd.rowspan);
 				}
