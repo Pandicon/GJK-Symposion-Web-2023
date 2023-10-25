@@ -216,6 +216,20 @@ public class TableAndAnnotationsParser {
             }
             table_rows.add(row);
         }
+        for(int col = table_rows.get(0).size() - 1; col >= 0; col -= 1) {
+            int row = 0;
+            while(row < table_rows.size()) {
+                Optional<TableCell> cell_opt = table_rows.get(row).get(col);
+                if(cell_opt.isPresent()) {
+                    TableCell cell = cell_opt.get();
+                    for(int i = 0; i < cell.rowspan - 1; i += 1) {
+                        row += 1;
+                        table_rows.get(row).remove(col);
+                    }
+                }
+                row += 1;
+            }
+        }
 
         return Optional.of(Pair.with(annotations, new Table(date, table_rows)));
     }
