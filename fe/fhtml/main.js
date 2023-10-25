@@ -28,6 +28,7 @@ if (!gl) {
 	varying vec2 uv;
 	uniform vec2 mp;
 	uniform float ms;
+	uniform float mh;
 	uniform float tm;
 
 	/* https://gist.github.com/patriciogonzalezvivo/670c22f3966e662d2f83 */
@@ -79,12 +80,12 @@ if (!gl) {
 		return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
 	}
 	void main(){
-		float n=32.0*snoise(vec3(uv*.25,tm+7.0))+
-			16.0*snoise(vec3(uv*.5,tm))+
+		float n=16.0*snoise(vec3(uv*.5,tm))+
 			8.0*snoise(vec3(uv*1.0,tm+1.0))+
 			4.0*snoise(vec3(uv*2.0,tm+2.0));
 		vec2 rp=(uv-mp)/ms;
-		n=mix(n,4.0*ms+8.0,exp(-dot(rp,rp)));
+		float amh=mh+16.0*snoise(vec3(mp*.5,tm));
+		n=mix(n,amh,exp(-dot(rp,rp)));
 		n=mod(n,1.0);
 		if(n<0.7){
 			gl_FragColor=vec4(1.0,1.0,1.0,1.0);
@@ -128,18 +129,21 @@ if (!gl) {
 	let asp_loc=gl.getUniformLocation(sh,"aspect");
 	let mp_loc=gl.getUniformLocation(sh,"mp");
 	let ms_loc=gl.getUniformLocation(sh,"ms");
+	let mh_loc=gl.getUniformLocation(sh,"mh");
 	document.onmousemove=function(e){
-		gl.uniform2f(mp_loc,e.clientX*0.01,1-e.clientY*0.01);
+		gl.uniform2f(mp_loc,e.clientX*0.01,(canvas.height-e.clientY)*0.01);
 	};
-	var ms=0.1,tms=0.3;
-	document.onmousedown=function(){tms=1.3;};
-	document.onmouseup=function(){tms=0.3;};
+	var ms=0.1,tms=0.3,mh=0.1,tmh=8.0;
+	document.onmousedown=function(){tms=1.3;tmh=12.0;};
+	document.onmouseup=function(){tms=0.3;tmh=6.0;};
 	function render(){
 		canvas.width = document.body.clientWidth;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
 		ms=(tms+ms)*0.5;
+		mh=(tmh+mh)*0.5;
 		gl.uniform1f(ms_loc,ms);
+		gl.uniform1f(mh_loc,mh);
 		gl.uniform1f(tm_loc,time*0.00001);
 		gl.uniform2f(asp_loc,canvas.width*0.01,canvas.height*0.01);
 		gl.drawArrays(gl.TRIANGLES,0,6);
