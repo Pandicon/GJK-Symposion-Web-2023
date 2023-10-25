@@ -4,6 +4,7 @@ import com.pandicon.gjk_symposion_2023_api.api_model.TableResponse;
 import com.pandicon.gjk_symposion_2023_api_service.APIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,16 +23,19 @@ public class APIController {
         this.api_service.fetch_harmonogram();
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/testicek")
     public ResponseEntity<String> test_path(@RequestParam Optional<Integer> id, @RequestParam Optional<List<Integer>> ids) {
         return api_service.get_test(id, ids);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/harmonogram")
     public ResponseEntity<Map<String, Object>> get_harmonogram(@RequestParam Optional<List<Integer>> days) {
         return api_service.get_harmonogram(days);
     }
 
+    @CrossOrigin(origins = "*")
     @GetMapping("/annotations")
     public ResponseEntity<Map<String, Object>> get_annotations(@RequestParam Optional<List<Integer>> days, @RequestParam Optional<List<String>> ids) {
         return api_service.get_annotations(days, ids);
