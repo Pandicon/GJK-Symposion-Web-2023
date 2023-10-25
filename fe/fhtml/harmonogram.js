@@ -57,12 +57,13 @@ function make_table(div,data,dayid){
 	for(let i=0;i<data.length;i++){
 		const dr=data[i];
 		const tr=table.insertRow();
-		const tm=days[dayid]+" "+(dr[0]===null?"":dr[0].title);
+		const tmb=i===0?"":(days[dayid]+" "+(data[i-1][0]===null?"":data[i-1][0].title));
 		for(let j=0;j<dr.length;j++){
 			const dd=dr[j];
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
 			if(j==0){td.classList.add("time");}
 			if(dd!==null){
+				const tm = tmb + ((!("rowspan" in dd) || i === 0)?"":(data[i+dd.rowspan-1][0]===null?"":(" - " + data[i+dd.rowspan-1][0].title)));
 				if("rowspan"in dd){
 					td.setAttribute("rowspan",dd.rowspan);
 				}
