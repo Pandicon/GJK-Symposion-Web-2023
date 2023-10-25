@@ -106,7 +106,7 @@ async function gen_tables(){
 	}
 	let tu=tables_div.appendChild(document.createElement("span"));
 	tu.classList.add("last_update");
-	tu.textContent="data z "+format_update(data.data.last_updated);
+	tu.textContent="Data z "+format_update(data.data.last_updated);
 	tt_ld=true;
 }
 gen_tables();
