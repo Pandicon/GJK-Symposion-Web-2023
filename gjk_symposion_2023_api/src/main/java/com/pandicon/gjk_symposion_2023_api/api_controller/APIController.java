@@ -1,6 +1,5 @@
 package com.pandicon.gjk_symposion_2023_api.api_controller;
 
-import com.pandicon.gjk_symposion_2023_api.api_model.TableResponse;
 import com.pandicon.gjk_symposion_2023_api_service.APIService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

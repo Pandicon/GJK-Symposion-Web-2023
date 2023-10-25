@@ -1,20 +1,20 @@
 package com.pandicon.gjk_symposion_2023_api_service;
 
+import com.opencsv.CSVReader;
 import com.pandicon.gjk_symposion_2023_api.api_model.AdditionalData;
 import com.pandicon.gjk_symposion_2023_api.api_model.Table;
 import com.pandicon.gjk_symposion_2023_api.api_model.TableCell;
 import org.javatuples.Pair;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
-import java.util.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.*;
 import java.util.stream.Collectors;
-import com.opencsv.CSVReader;
 
 class Lecture {
     public String lecturer;
