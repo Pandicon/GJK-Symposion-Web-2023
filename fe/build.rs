@@ -73,6 +73,9 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += &cached_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "rsrc_harmonogram_js", "", "_str");
 	out += &cached_ep(&mut routes, "title", "\"img\" / \"title.png\"", "utils::CT_PNG", "img_title_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "icon", "\"img\" / \"icon.png\"", "utils::CT_PNG", "img_ico_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "fbi", "\"img\" / \"fb.png\"", "utils::CT_PNG", "img_fb_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "igi", "\"img\" / \"ig.png\"", "utils::CT_PNG", "img_ig_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "img_mail_png.as_slice()", "", "_slice");
 	out += &(String::from("\n\tlet routes = ") + routes[0] + "_route");
 	for r in routes.iter().skip(1) {
 		out += &(String::from(".or(") + r + "_route)");

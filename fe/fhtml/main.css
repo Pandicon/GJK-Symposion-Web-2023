@@ -46,6 +46,7 @@ h4{
 	z-index:901;
 	overflow-y:scroll;
 	overscroll-behavior:contain;
+	border-radius:10px;
 }
 #ov_lecturer{
 	text-align:center;
@@ -88,6 +89,7 @@ h4{
 	padding:20px;
 	font-style:bold;
 	border:3px solid #361F5F;
+	border-radius:5px;
 }
 
 header{
@@ -112,6 +114,10 @@ header{
 .header_fg h2{
 	display:inline;
 	background-color:white;
+	padding:5px;
+	margin-left:20px;
+	border-radius:5px;
+	font-size:1.5em;
 }
 nav{
 	background-color:white;
