@@ -2,9 +2,7 @@ package com.pandicon.gjk_symposion_2023_api_service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pandicon.gjk_symposion_2023_api.api_model.AdditionalData;
-import com.pandicon.gjk_symposion_2023_api.api_model.Table;
-import com.pandicon.gjk_symposion_2023_api.api_model.TableResponse;
+import com.pandicon.gjk_symposion_2023_api.api_model.*;
 import org.javatuples.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -147,7 +145,7 @@ public class APIService {
                 return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
             }
             Map<String, Object> response = new HashMap<>();
-            response.put("data", this.annotations_cache);
+            response.put("data", new AnnotationsIdsResponse(this.last_harmonogram_cache_update, this.annotations_cache));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else if(ids.isEmpty()) {
             if(this.annotations_per_day_cache.isEmpty()) {
@@ -169,7 +167,7 @@ public class APIService {
                 annotations.put(Integer.toString(i), this.annotations_per_day_cache.get(i));
             }
             Map<String, Object> response = new HashMap<>();
-            response.put("data", annotations);
+            response.put("data", new AnnotationsDaysResponse(this.last_harmonogram_cache_update, annotations));
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             if(this.annotations_cache.isEmpty()) {
@@ -190,7 +188,7 @@ public class APIService {
                 annotations.put(id, this.annotations_cache.get(id));
             }
             Map<String, Object> response = new HashMap<>();
-            response.put("data", annotations);
+            response.put("data", new AnnotationsIdsResponse(this.last_harmonogram_cache_update, annotations));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
