@@ -37,6 +37,7 @@ fn page_with_sections(sections : &str, urlbase : &str) -> String {
 const DAYS : [&str; 7] = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const MONTHS : [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 fn gen_routes() -> String {
+	let release_build = std::env::var("PROFILE").unwrap() == "release";
 	let now = chrono::offset::Utc::now();
 	let date = now.date_naive();
 	let time = now.time();
@@ -59,7 +60,11 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += "\npub async fn run_server(ip : [u8; 4], port : u16) {\n";
 	for f in std::fs::read_dir("./html/").unwrap() {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
-		out += &format!("\tlet rsrc_{} = include_str!(\"../html/{}\");\n", fn_.replace('.', "_"), fn_);
+		if release_build {
+			out += &format!("\tlet rsrc_{} = include_str!(\"../html/{}\");\n", fn_.replace('.', "_"), fn_);
+		} else {
+			out += &format!("\tlet mut file = std::fs::File::open(&std::path::Path::new(\"./html/{}\")).unwrap();\n\tlet mut rsrc_{} = String::new();\n\tlet _ = std::io::Read::read_to_string(&mut file, &mut rsrc_{});\n\tlet rsrc_{}: &'static str = Box::leak(rsrc_{}.into_boxed_str());\n", fn_, fn_.replace('.', "_"), fn_.replace('.', "_"), fn_.replace('.', "_"), fn_.replace('.', "_"));
+		}
 	}
 	for f in std::fs::read_dir("./img/").unwrap() {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
