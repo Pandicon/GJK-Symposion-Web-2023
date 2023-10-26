@@ -1,6 +1,9 @@
 use std::io::{Read, Write};
 use chrono::{Datelike, Timelike};
 
+fn file_name_to_id(name: &str) -> String {
+	name.replace(".", "_")
+}
 fn mk_clean(file : &str) {
 	let mut buff : String = String::new();
 	{
@@ -13,12 +16,20 @@ fn mk_clean(file : &str) {
 		f.write_all(buff.as_bytes()).unwrap();
 	}
 }
-fn cached_ep(routes : &mut std::vec::Vec<&'static str>, epid : &'static str, ep : &str, ct : &str, val : &str, args : &str, cached_postfix : &str) -> String {
+fn cached_ep(routes : &mut std::vec::Vec<&'static str>, hot_reload: bool, path : &'static str, epid : &'static str, ep : &str, ct : &str, val : &str, args : &str, cached_postfix : &str) -> String {
+	let release_build = std::env::var("PROFILE").unwrap() == "release";
 	routes.push(epid);
-	let code = String::from("{\n\t\tif utils::check_if_modified_since(modified) {\n\t\t\tcached_response_t(")+ct+").body("+epid+
-		"_data).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached"+cached_postfix+"()\n\t\t}\n\t}";
-	format!("\tlet {}_data = {};\n\tlet {}_route = warp::path!({}).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}modified : Option<String>| {});\n",
-		epid, val, epid, ep, args, code)
+	
+	if release_build || !hot_reload {
+		let code = String::from("{\n\t\tif utils::check_if_modified_since(modified) {\n\t\t\tcached_response_t(")+ct+").body("+epid+
+			"_data).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached"+cached_postfix+"()\n\t\t}\n\t}";
+		format!("\tlet {}_data = {};\n\tlet {}_route = warp::path!({}).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}modified : Option<String>| {});\n",
+			epid, val, epid, ep, args, code)
+	} else {
+		let code = String::from("{\n\t\tif utils::check_if_modified_since(modified) {\n\t\t\tlet mut file = std::fs::File::open(&std::path::Path::new(\"") + path + "\")).unwrap();\n\t\t\tlet mut rsrc = String::new();\n\t\t\tlet _ = std::io::Read::read_to_string(&mut file, &mut rsrc);\n\t\t\tlet r: &'static str = Box::leak(rsrc.into_boxed_str());\n\t\t\tcached_response_t("+ct+").body(r).unwrap()\n\t\t} else {\n\t\t\tutils::reply_cached"+cached_postfix+"()\n\t\t}\n\t}";
+		format!("\tlet {}_route = warp::path!({}).and(warp::header::optional(\"If-Modified-Since\")).map(move |{}modified : Option<String>| {});\n",
+			epid, ep, args, code)
+	}
 }
 fn cached_ep_annot(routes : &mut std::vec::Vec<&'static str>, epid : &'static str, ep : &str, ct : &str, val : &str, args : &str) -> String {
 	routes.push(epid);
@@ -61,26 +72,27 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	for f in std::fs::read_dir("./html/").unwrap() {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
 		if release_build {
-			out += &format!("\tlet rsrc_{} = include_str!(\"../html/{}\");\n", fn_.replace('.', "_"), fn_);
+			out += &format!("\tlet rsrc_{} = include_str!(\"../html/{}\");\n", file_name_to_id(&fn_), fn_);
 		} else {
-			out += &format!("\tlet mut file = std::fs::File::open(&std::path::Path::new(\"./html/{}\")).unwrap();\n\tlet mut rsrc_{} = String::new();\n\tlet _ = std::io::Read::read_to_string(&mut file, &mut rsrc_{});\n\tlet rsrc_{}: &'static str = Box::leak(rsrc_{}.into_boxed_str());\n", fn_, fn_.replace('.', "_"), fn_.replace('.', "_"), fn_.replace('.', "_"), fn_.replace('.', "_"));
+			let id = file_name_to_id(&fn_);
+			out += &format!("\tlet mut file = std::fs::File::open(&std::path::Path::new(\"./html/{}\")).unwrap();\n\tlet mut rsrc_{} = String::new();\n\tlet _ = std::io::Read::read_to_string(&mut file, &mut rsrc_{});\n\tlet rsrc_{}: &'static str = Box::leak(rsrc_{}.into_boxed_str());\n", fn_, id, id, id, id);
 		}
 	}
 	for f in std::fs::read_dir("./img/").unwrap() {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
-		out += &format!("\tlet img_{} = include_bytes!(\"../img/{}\");\n", fn_.replace('.', "_"), fn_);
+		out += &format!("\tlet img_{} = include_bytes!(\"../img/{}\");\n", file_name_to_id(&fn_), fn_);
 	}
 	let mut routes = vec![];
 	out += &cached_ep_annot(&mut routes, "root", "", "utils::CT_HTML", &page_with_sections("rsrc_uvod_html, rsrc_o_akci_html, rsrc_harmonogram_html, rsrc_kontakty_html", ""), "");
 	out += &cached_ep_annot(&mut routes, "harmonogram", "\"harmonogram\"", "utils::CT_HTML", &page_with_sections("rsrc_harmonogram_html", ""), "");
-	out += &cached_ep(&mut routes, "main_css", "\"main.css\"", "utils::CT_CSS", "rsrc_main_css", "", "_str");
-	out += &cached_ep(&mut routes, "main_js", "\"main.js\"", "utils::CT_JS", "rsrc_main_js", "", "_str");
-	out += &cached_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "rsrc_harmonogram_js", "", "_str");
-	out += &cached_ep(&mut routes, "title", "\"img\" / \"title.png\"", "utils::CT_PNG", "img_title_png.as_slice()", "", "_slice");
-	out += &cached_ep(&mut routes, "icon", "\"img\" / \"icon.png\"", "utils::CT_PNG", "img_ico_png.as_slice()", "", "_slice");
-	out += &cached_ep(&mut routes, "fbi", "\"img\" / \"fb.png\"", "utils::CT_PNG", "img_fb_png.as_slice()", "", "_slice");
-	out += &cached_ep(&mut routes, "igi", "\"img\" / \"ig.png\"", "utils::CT_PNG", "img_ig_png.as_slice()", "", "_slice");
-	out += &cached_ep(&mut routes, "maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "img_mail_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, !release_build, if release_build { "./html/main.css" } else { "./fhtml/main.css" }, "main_css", "\"main.css\"", "utils::CT_CSS", "rsrc_main_css", "", "_str");
+	out += &cached_ep(&mut routes, !release_build, if release_build { "./html/main.js" } else { "./fhtml/main.js" }, "main_js", "\"main.js\"", "utils::CT_JS", "rsrc_main_js", "", "_str");
+	out += &cached_ep(&mut routes, !release_build, if release_build { "./html/harmonogram.js" } else { "./fhtml/harmonogram.js" }, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "rsrc_harmonogram_js", "", "_str");
+	out += &cached_ep(&mut routes, false, "./img/title.png","title", "\"img\" / \"title.png\"", "utils::CT_PNG", "img_title_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, false, "./img/ico.png","icon", "\"img\" / \"icon.png\"", "utils::CT_PNG", "img_ico_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, false, "./img/fbi.png","fbi", "\"img\" / \"fb.png\"", "utils::CT_PNG", "img_fb_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, false, "./img/igi.png","igi", "\"img\" / \"ig.png\"", "utils::CT_PNG", "img_ig_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, false, "./img/mail.png","maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "img_mail_png.as_slice()", "", "_slice");
 	out += &(String::from("\n\tlet routes = ") + routes[0] + "_route");
 	for r in routes.iter().skip(1) {
 		out += &(String::from(".or(") + r + "_route)");
