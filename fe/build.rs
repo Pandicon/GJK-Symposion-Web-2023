@@ -87,6 +87,7 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out
 }
 fn main() {
+	std::fs::create_dir_all("./html").expect("Couldn't create the html directory");
 	for f in std::fs::read_dir("./fhtml/").unwrap() {
 		mk_clean(&f.unwrap().file_name().into_string().unwrap());
 	}
