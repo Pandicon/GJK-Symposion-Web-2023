@@ -34,7 +34,7 @@ if (!gl) {
 			   sin(20.0*x+15.0*y) / 3.0 +
 			   sin(4.0*x+10.0*y) / -4.0 +
 			   sin(y) / 2.0 +
-			   sin(x*x*y*20.0) + 
+			   sin(sqrt(x)*15.0+sqrt(y)*10.0+sqrt(x*y)*7.0) / 1.4 +
 			   sin(x * 20.0 + 4.0) / 5.0 +
 			   sin(y * 30.0) / 5.0 + 
 			   sin(x) / 4.0;
@@ -45,10 +45,12 @@ if (!gl) {
 		const vec3 col1 = vec3(0.8, 0.1, 0.5);
 		const vec3 col2 = vec3(0.1, 0.1, 0.8);
 		
-		vec2 uv = gl_FragCoord.xy / resolution.xy;
-		uv.x = uv.x + cos(tm/100.)/4. - 0.5; //the dividors of the uv needs to be based off of aspect ratio...
-		uv.y = uv.y/5. + sin(tm/100.)/20. -0.5;
-		
+		vec2 uv = gl_FragCoord.xy / resolution.xy * 2.0;
+		uv.x = uv.x + cos(tm/100.)/4. + 0.5;
+		uv.y = uv.y + sin(tm/100.)/20. + 0.5;
+		uv.x = uv.x * resolution.x / resolution.y;
+		uv.x = uv.x / 5.0;
+		uv.y = uv.y / 5.0;
 		
 		float z = wave(uv.x, uv.y) + 2.0;
 		
