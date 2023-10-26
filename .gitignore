@@ -1,5 +1,5 @@
 /fe/Cargo.lock
 /fe/target/**
 /fe/test.sh
-/fe/html/**
+
 /fe/src/gen_routes.rs
