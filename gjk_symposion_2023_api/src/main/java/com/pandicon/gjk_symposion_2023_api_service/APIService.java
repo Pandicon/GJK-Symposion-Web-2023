@@ -102,7 +102,10 @@ public class APIService {
     }
 
     public ResponseEntity<Map<String, Object>> get_harmonogram(Optional<List<Integer>> days) {
-        if(this.harmonogram_cache.isEmpty() || this.last_harmonogram_cache_update + this.cache_refresh_cooldown_ms < new Date().getTime()) {
+        if(this.last_harmonogram_cache_update + this.cache_refresh_cooldown_ms < new Date().getTime()) {
+            new Thread(this::fetch_harmonogram).start();
+        }
+        if(this.harmonogram_cache.isEmpty()) {
             this.fetch_harmonogram();
         }
         if(this.harmonogram_cache.isEmpty()) {
@@ -131,7 +134,10 @@ public class APIService {
     }
 
     public ResponseEntity<Map<String, Object>> get_annotations(Optional<List<Integer>> days, Optional<List<String>> ids) {
-        if(this.annotations_cache.isEmpty() || this.last_harmonogram_cache_update + this.cache_refresh_cooldown_ms < new Date().getTime()) {
+        if(this.last_harmonogram_cache_update + this.cache_refresh_cooldown_ms < new Date().getTime()) {
+            new Thread(this::fetch_harmonogram).start();
+        }
+        if(this.annotations_cache.isEmpty()) {
             this.fetch_harmonogram();
         }
         if(days.isEmpty() && ids.isEmpty()) {
