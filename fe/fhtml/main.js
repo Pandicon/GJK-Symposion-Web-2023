@@ -55,12 +55,12 @@ if (!gl) {
 		
 		
 		z *= 2.0 * (sin(tm/20.)+2.);
-		float d = fract(z*2.); // by changing the coefficient of z you change the amount of lines on screen
+		float d = fract(z*1.5); // by changing the coefficient of z you change the amount of lines on screen
 		if(mod(z, 2.0) > 1.) d = 1.-d;
 		 
 		vec3 col;
-		for(float i=0.; i<3.; i++){
-			col += vec3(step(d/fwidth(z*2.), 0.5+1. - (i+1.)/3.)*((i+1.)/2.));
+		for(float i=0.; i<5.; i++){
+			col += vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)), 0.5+1. - (i+1.)/3.)*((i+1.)/5.));
 		}
 		
 		//col *= mix(col1, col2, fwidth(z*3.)+0.3); the z coeficient needs to be multiplied respectivly to resolution and i can't get that to work properly...
