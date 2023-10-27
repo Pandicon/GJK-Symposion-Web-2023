@@ -5,7 +5,8 @@ a{
 body{
 	margin:0;
 	padding:0;
-	background-color:#eee7fd;
+	background-color: black;
+	color: white;
 }
 main{
 	margin:10px;
@@ -21,8 +22,32 @@ h4{
 }
 
 #uvod{
-	text-align:center;
-	font-size:3em;
+	text-align: center;
+	font-size: 3em;
+}
+#uvod table{
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#uvod .left{
+	text-align: right;
+	vertical-align: top;
+	width: 250px;
+	-webkit-text-stroke: 1px white;
+	color: rgba(0, 0, 0, 1);
+}
+#uvod .right{
+	text-align: left;
+	vertical-align: top;
+	width: 250px;
+	color: rgba(0, 0, 0, 1);
+	-webkit-text-stroke: 1px white;
+}
+#uvod .center{
+	text-align: center;
+	vertical-align: top;
+	
 }
 
 #ov_overlay{
@@ -117,7 +142,7 @@ header{
 .header_fg h2{
 	position:absolute;
 	display:inline;
-	background-color:white;
+	background-color:#333;
 	padding:5px;
 	margin-left:20px;
 	transform:translateY(40px);
@@ -125,7 +150,7 @@ header{
 	font-size:1.5em;
 }
 nav{
-	background-color:white;
+	background-color:black;
 	border-bottom:1px solid #361F5F;
 	height:20px;
 }

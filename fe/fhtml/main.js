@@ -31,12 +31,12 @@ if (!gl) {
 	float wave(float x, float y)
 	{
 		return sin(10.0*x+10.0*y) / 5.0 +
-			   sin(20.0*x+15.0*y) / 3.0 +
+			   sin(8.0*x+5.0*y) / 3.0 +
 			   sin(4.0*x+10.0*y) / -4.0 +
 			   sin(y) / 2.0 +
-			   sin(sqrt(x)*15.0+sqrt(y)*10.0+sqrt(x*y)*7.0) / 1.4 +
-			   sin(x * 20.0 + 4.0) / 5.0 +
-			   sin(y * 30.0) / 5.0 + 
+			   sin(x*x*y*5.0) +
+			   sin(x * 8.0 + 4.0) / 5.0 +
+			   sin(y * 10.0) / 5.0 + 
 			   sin(x) / 4.0;
 	}
 	
@@ -44,19 +44,18 @@ if (!gl) {
 	{
 		const vec3 col1 = vec3(0.8, 0.1, 0.5);
 		const vec3 col2 = vec3(0.1, 0.1, 0.8);
-		
-		vec2 uv = gl_FragCoord.xy / resolution.xy * 2.0;
-		uv.x = uv.x + cos(tm/100.)/4. + 0.5;
-		uv.y = uv.y + sin(tm/100.)/20. + 0.5;
-		uv.x = uv.x * resolution.x / resolution.y;
-		uv.x = uv.x / 5.0;
-		uv.y = uv.y / 5.0;
+		vec2 uv = gl_FragCoord.xy / resolution.xy;
+		float aspect = resolution.x/resolution.y;
+		uv.y /= aspect;
+		uv.xy *= vec2(2., 4.);
+		uv.x -= 1.;
+		uv.y = uv.y + sin(tm/20.);
 		
 		float z = wave(uv.x, uv.y) + 2.0;
 		
 		
 		z *= 2.0 * (sin(tm/20.)+2.);
-		float d = fract(z);
+		float d = fract(z*2.); // by changing the coefficient of z you change the amount of lines on screen
 		if(mod(z, 2.0) > 1.) d = 1.-d;
 		 
 		vec3 col;
@@ -64,7 +63,8 @@ if (!gl) {
 			col += vec3(step(d/fwidth(z*2.), 0.5+1. - (i+1.)/3.)*((i+1.)/2.));
 		}
 		
-		col *= mix(col1, col2, fwidth(z*3.)+0.3);
+		//col *= mix(col1, col2, fwidth(z*3.)+0.3); the z coeficient needs to be multiplied respectivly to resolution and i can't get that to work properly...
+		col *= mix(col1, col2, gl_FragCoord.x / resolution.x);
 		
 		gl_FragColor = vec4(col, 1.);
 	}`;
