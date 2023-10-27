@@ -71,14 +71,11 @@ public class APIService {
         this.harmonogram_cache = data.getValue1();
         List<HashMap<String, AdditionalData>> annotations = data.getValue0();
         this.annotations_per_day_cache = annotations;
-        System.out.println(annotations.size());
         HashMap<String, AdditionalData> annotations_merged = new HashMap<>();
         for(HashMap<String, AdditionalData> day_annotations : annotations) {
             annotations_merged.putAll(day_annotations);
         }
         this.annotations_cache = annotations_merged;
-        System.out.println(annotations_merged);
-        System.out.println(annotations.size());
     }
     public ResponseEntity<String> get_test(Optional<Integer> id_opt, Optional<List<Integer>> ids_opt) {
         StringBuilder response = new StringBuilder();
