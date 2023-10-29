@@ -1,6 +1,8 @@
 use std::io::{Read, Write};
 use chrono::{Datelike, Timelike};
 
+const HOT_RELOAD : bool = false;
+
 fn file_name_to_id(name: &str) -> String {
 	name.replace(".", "_")
 }
@@ -66,7 +68,8 @@ fn page_with_sections(sections : &str, urlbase : &str) -> String {
 const DAYS : [&str; 7] = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const MONTHS : [&str; 12] = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 fn gen_routes() -> String {
-	let hot_reload = std::env::var("ENABLE_HOT_RELOAD").is_ok();
+	//let hot_reload = std::env::var("ENABLE_HOT_RELOAD").is_ok();
+	let hot_reload = HOT_RELOAD;
 	let now = chrono::offset::Utc::now();
 	let date = now.date_naive();
 	let time = now.time();
