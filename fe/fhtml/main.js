@@ -109,7 +109,8 @@ if (!gl) {
 	document.onmousedown=function(){tms=1.3;tmh=12.0;};
 	document.onmouseup=function(){tms=0.3;tmh=6.0;};
 	function render(){
-		canvas.width = document.body.clientWidth;
+		canvas.width = window.innerWidth;
+		canvas.height = window.innerWidth>1100? 100 : 200;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
 		ms=(tms+ms)*0.5;
