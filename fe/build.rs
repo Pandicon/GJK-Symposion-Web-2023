@@ -1,6 +1,7 @@
 use std::io::{Read, Write};
 use chrono::{Datelike, Timelike};
 
+const HOT_RELOAD_OPTION : bool = true;
 const HOT_RELOAD : bool = false;
 
 fn file_name_to_id(name: &str) -> String {
@@ -92,6 +93,8 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += "\npub async fn run_server(ip : [u8; 4], port : u16) {\n";
 	if hot_reload {
 		out += "\tprintln!(\"hot-reload is on!\");\n";
+	} else if HOT_RELOAD_OPTION {
+		out += "\tprintln!(\"hot-reload is {}!\", if std::env::args().any(|a| a == \"--hot-reload\") { \"on (from command line)\" } else { \"off\" });\n";
 	}
 	for f in std::fs::read_dir("./html/").unwrap() {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
@@ -104,14 +107,16 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	let mut routes = vec![];
 	out += &cached_ep_annot(&mut routes, "root", "", "utils::CT_HTML", &page_with_sections("_rsrc_uvod_html, _rsrc_o_akci_html, _rsrc_harmonogram_html, _rsrc_kontakty_html", ""), "");
 	out += &cached_ep_annot(&mut routes, "harmonogram", "\"harmonogram\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html", ""), "");
-	if hot_reload {
-		out += &str_hot_reload_ep(&mut routes, "main_css", "\"main.css\"", "./fhtml/main.css", "utils::CT_CSS", "");
-		out += &str_hot_reload_ep(&mut routes, "main_js", "\"main.js\"", "./fhtml/main.js", "utils::CT_JS", "");
-		out += &str_hot_reload_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "./fhtml/harmonogram.js", "utils::CT_JS", "");
-	} else {
-		out += &cached_ep(&mut routes, "main_css", "\"main.css\"", "utils::CT_CSS", "_rsrc_main_css", "", "_str");
-		out += &cached_ep(&mut routes, "main_js", "\"main.js\"", "utils::CT_JS", "_rsrc_main_js", "", "_str");
-		out += &cached_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "_rsrc_harmonogram_js", "", "_str");
+	if !HOT_RELOAD_OPTION {
+		if hot_reload {
+			out += &str_hot_reload_ep(&mut routes, "main_css", "\"main.css\"", "./fhtml/main.css", "utils::CT_CSS", "");
+			out += &str_hot_reload_ep(&mut routes, "main_js", "\"main.js\"", "./fhtml/main.js", "utils::CT_JS", "");
+			out += &str_hot_reload_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "./fhtml/harmonogram.js", "utils::CT_JS", "");
+		} else {
+			out += &cached_ep(&mut routes, "main_css", "\"main.css\"", "utils::CT_CSS", "_rsrc_main_css", "", "_str");
+			out += &cached_ep(&mut routes, "main_js", "\"main.js\"", "utils::CT_JS", "_rsrc_main_js", "", "_str");
+			out += &cached_ep(&mut routes, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "_rsrc_harmonogram_js", "", "_str");
+		}
 	}
 	out += &cached_ep(&mut routes, "title", "\"img\" / \"title.png\"", "utils::CT_PNG", "_img_title_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "icon", "\"img\" / \"icon.png\"", "utils::CT_PNG", "_img_ico_png.as_slice()", "", "_slice");
@@ -122,10 +127,28 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	for r in routes.iter().skip(1) {
 		out += &(String::from(".or(") + r + "_route)");
 	}
-	out += r#";
-	println!("serving on {}.{}.{}.{}:{}...", ip[0], ip[1], ip[2], ip[3], port);
-	warp::serve(routes).run((ip, port)).await;
-}"#;
+	out += ";\n";
+	let end = |routes_var : &str| { String::from("\tprintln!(\"serving on {}.{}.{}.{}:{}...\", ip[0], ip[1], ip[2], ip[3], port);\n\twarp::serve(")+routes_var+").run((ip, port)).await;" };
+	if HOT_RELOAD_OPTION {
+		let mut routes2 = vec![];
+		routes.push("hot_reloads");
+		out += "\tif std::env::args().any(|a| a == \"--hot-reload\") {\n";
+		out += &str_hot_reload_ep(&mut routes2, "main_css", "\"main.css\"", "./fhtml/main.css", "utils::CT_CSS", "");
+		out += &str_hot_reload_ep(&mut routes2, "main_js", "\"main.js\"", "./fhtml/main.js", "utils::CT_JS", "");
+		out += &str_hot_reload_ep(&mut routes2, "harmonogram_js", "\"harmonogram.js\"", "./fhtml/harmonogram.js", "utils::CT_JS", "");
+		out += "\t\tlet routes2 = routes.or(main_css_route).or(main_js_route).or(harmonogram_js_route);\n";
+		out += &end("routes2");
+		out += "\t} else {\n";
+		out += &cached_ep(&mut routes2, "main_css", "\"main.css\"", "utils::CT_CSS", "_rsrc_main_css", "", "_str");
+		out += &cached_ep(&mut routes2, "main_js", "\"main.js\"", "utils::CT_JS", "_rsrc_main_js", "", "_str");
+		out += &cached_ep(&mut routes2, "harmonogram_js", "\"harmonogram.js\"", "utils::CT_JS", "_rsrc_harmonogram_js", "", "_str");
+		out += "\t\tlet routes2 = routes.or(main_css_route).or(main_js_route).or(harmonogram_js_route);\n";
+		out += &end("routes2");
+		out += "\t}\n";
+	} else {
+		out += &end("routes");
+	}
+	out += "}";
 	out
 }
 fn main() {
