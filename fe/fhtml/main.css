@@ -1,3 +1,7 @@
+:root {
+	--bg_colour: #151515
+}
+
 a{
 	text-decoration:inherit;
 	color:inherit;
@@ -5,7 +9,7 @@ a{
 body{
 	margin:0;
 	padding:0;
-	background-color: black;
+	background-color: var(--bg_colour);
 	color: white;
 }
 main{
@@ -168,7 +172,7 @@ header{
 	margin-bottom:10px;
 }
 nav{
-	background-color:black;
+	background-color:var(--bg_colour);
 	border-bottom:1px solid #361F5F;
 	height:20px;
 }
