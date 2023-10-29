@@ -1,6 +1,6 @@
 :root {
 	--bg_colour: #151515
-	--bg_color: #151515
+	--bg_color: var(--bg_colour)
 }
 
 a{
