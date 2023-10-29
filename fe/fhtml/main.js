@@ -4,6 +4,15 @@ function open_main_page(){
 function open_timetable(){
 	window.location="/harmonogram";
 }
+function to_about_event() {
+	window.location = "/#o_akci";
+}
+function to_harmonogram() {
+	window.location = "/#harmonogram";
+}
+function to_contacts() {
+	window.location = "/#kontakty";
+}
 
 const canvas=document.getElementById("hbg_canvas");
 const gl = canvas.getContext("webgl");
