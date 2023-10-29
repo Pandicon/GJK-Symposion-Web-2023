@@ -51,4 +51,9 @@ const EMPTY_BARR : [u8; 0] = [];
 pub fn reply_cached_slice() -> warp::http::Response<&'static [u8]> {
 	warp::http::Response::builder().status(304).body(EMPTY_BARR.as_slice()).unwrap()
 }
- 
+pub fn file_mod_time(file : &str) -> u64 {
+	std::fs::metadata(file).unwrap().modified().unwrap().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
+}
+pub fn uncached_response_t(content_type : &str) -> warp::http::response::Builder {
+	warp::http::Response::builder().header("content-type", content_type)
+}

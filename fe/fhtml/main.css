@@ -1,5 +1,6 @@
 :root {
-	--bg_color: #151515
+	--bg_colour:#151515;
+	--bg_color:var(--bg_colour);
 }
 
 a{
@@ -9,7 +10,7 @@ a{
 body{
 	margin:0;
 	padding:0;
-	background-color: var(--bg_color);
+	background-color: var(--bg_colour);
 	color: white;
 }
 main{
@@ -177,7 +178,7 @@ header{
 	margin-bottom:10px;
 }
 nav{
-	background-color:var(--bg_color);
+	background-color:var(--bg_colour);
 	border-bottom:1px solid #361F5F;
 	height:20px;
 }
