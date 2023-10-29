@@ -135,6 +135,11 @@ header{
 	left:0;
 }
 
+#hbg_canvas{
+	border-radius: 0px 0px 25px 25px;
+	box-shadow: 0px 0px 20px #2a2a2a;
+}
+
 .header_fg{
 	position:relative;
 	z-index:5;
