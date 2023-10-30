@@ -10,7 +10,7 @@ pub fn insert_js(src : &str, js : &str) -> String {
 }
 pub fn insert_annoation_autopopup(src : &str, id : &str) -> String {
 	let mut out = src.to_owned();
-	if id.len() > 10 {
+	if id.len() > 7 || id.contains('"') {
 		return out;
 	}
 	out.insert_str(src.find("</body>").unwrap_or(src.len()), &format!("<script>popup(\"{}\");</script>", id));
