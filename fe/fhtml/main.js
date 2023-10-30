@@ -47,8 +47,8 @@ if (!gl) {
 			   sin(x)/4.0;
 	}
 	void main(){
-		const vec3 col1=vec3(0.8,0.1,0.5);
-		const vec3 col2=vec3(0.1,0.1,0.8);
+		const vec3 col1=vec3(0.97, 0.96, 0.87);
+		const vec3 col2=vec3(0.5);
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;
@@ -59,12 +59,12 @@ if (!gl) {
 		z*=2.0*(sin(tm/20.)+2.);
 		float d=fract(z*1.5);/*coef. changes the amount of lines on screen*/
 		if(mod(z,2.0)>1.)d=1.-d;
-		vec3 col=vec3(0.3,0.3,0.3);
+		vec3 col;
 		for(float i=0.; i<5.; i++){
 			col += vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),0.5+1.-(i+1.)/3.)*((i+1.)/5.));
 		}
-		/*col*=mix(col1,col2,fwidth(z*3.)+0.3);*/
-		col*=mix(col1,col2,gl_FragCoord.x/resolution.x);
+		col = clamp(col *-1. + 1., 0., 1.);
+		col = mix(col2, col1, col);
 		gl_FragColor=vec4(col,1.);
 	}`;
 	function make_sh(tp,src) {
@@ -117,7 +117,7 @@ if (!gl) {
 		mh=(tmh+mh)*0.5;
 		gl.uniform1f(ms_loc,ms);
 		gl.uniform1f(mh_loc,mh);
-		gl.uniform1f(tm_loc,time*0.001);
+		gl.uniform1f(tm_loc,time*0.0001);
 		gl.uniform2f(sh.resolution, canvas.width, canvas.height);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		setTimeout(function(){requestAnimationFrame(render);},50);
