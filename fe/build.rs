@@ -123,6 +123,7 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += &cached_ep(&mut routes, "fbi", "\"img\" / \"fb.png\"", "utils::CT_PNG", "_img_fb_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "igi", "\"img\" / \"ig.png\"", "utils::CT_PNG", "_img_ig_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "_img_mail_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "bgi", "\"img\" / \"bg.svg\"", "utils::CT_SVG", "_img_bg_svg.as_slice()", "", "_slice");
 	out += &(String::from("\n\tlet routes = ") + routes[0] + "_route");
 	for r in routes.iter().skip(1) {
 		out += &(String::from(".or(") + r + "_route)");

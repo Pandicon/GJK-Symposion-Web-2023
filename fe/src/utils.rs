@@ -27,6 +27,7 @@ pub const CT_HTML : &str = "text/html; charset=utf-8";
 pub const CT_CSS : &str = "text/css; charset=utf-8";
 pub const CT_JS : &str = "text/javascript; charset=utf-8";
 pub const CT_PNG : &str = "image/png";
+pub const CT_SVG : &str = "image/svg+xml";
 pub const MONTHS : [&str; 12] = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 pub fn check_if_modified_since(mod_if_time : Option<String>) -> bool {
 	if let Some(t) = mod_if_time {

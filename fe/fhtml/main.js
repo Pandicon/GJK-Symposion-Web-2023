@@ -13,16 +13,6 @@ function to_harmonogram() {
 function to_contacts() {
 	window.location = "/#kontakty";
 }
-console.log(window.innerWidth, window.innerHeight);
-if(window.innerWidth>=window.innerHeight){ /* pls somebody make this run everytime the screen rotation changes */
-	document.getElementById("bg_contour_lines").style.width = "100vw";
-	document.getElementById("bg_contour_lines").style.height = "auto";
-}
-else{
-	document.getElementById("bg_contour_lines").style.width = "auto";
-	document.getElementById("bg_contour_lines").style.height = "100vh";
-}
-
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
 const gl = canvas.getContext("webgl");
