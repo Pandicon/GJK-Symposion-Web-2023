@@ -27,6 +27,7 @@ main {
 	padding: 20px;
 	background: url('/img/bg.svg') no-repeat center center fixed;
 	background-size: cover;
+	border-bottom: 1px solid black;
 }
 
 h3 {
@@ -257,7 +258,7 @@ nav a {
 }
 
 #harmonogram td {
-	background-color: #ffffffa0;
+	background-color: #ffffffc0;
 	text-align: center;
 	border-radius: 5px;
 }
