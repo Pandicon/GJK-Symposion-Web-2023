@@ -29,6 +29,9 @@ main {
 	background-size: cover;
 	border-bottom: 1px solid black;
 }
+section {
+	background-color: #ffffff80;
+}
 
 h3 {
 	font-size: 3em;
@@ -258,7 +261,7 @@ nav a {
 }
 
 #harmonogram td {
-	background-color: #ffffffc0;
+	background-color: #ffffffe0;
 	text-align: center;
 	border-radius: 5px;
 }
