@@ -6,6 +6,10 @@
 	--header_shadow_blur: 3px;
 }
 
+* {
+	font-family: 'Roboto', serif;
+}
+
 a {
 	text-decoration: inherit;
 	color: inherit;
