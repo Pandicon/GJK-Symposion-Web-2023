@@ -49,12 +49,13 @@ if (!gl) {
 	void main(){
 		const vec3 colA=vec3(0.53,0.46,0.68);
 		const vec3 colB=vec3(0.21,0.12,0.37);
-		vec3 colbg=vec3(0.85);
+		vec3 colbg=vec3(249./255., 243./255., 222./255.);
 		const vec3 col2=vec3(0.2);
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;
 		uv.xy*=vec2(2.,4.);
+		if (resolution.x>2200.) uv.xy*=2.;
 		uv.x-=1.;
 		uv.y=uv.y+sin(tm/20.);
 		float z = wave(uv.x,uv.y)+2.0;
