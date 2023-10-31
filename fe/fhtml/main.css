@@ -92,7 +92,7 @@ h4 {
 	height: 90vh;
 	left: 5vw;
 	top: 5vh;
-	background: #F8F4DE;
+	background: #CCCEFF;
 	z-index: 901;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
@@ -149,7 +149,7 @@ h4 {
 	right: 10px;
 	padding: 20px;
 	font-style: bold;
-	border: 3px solid #361F5F;
+	border: 3px solid #4D4F9B;
 	border-radius: 5px;
 }
 
