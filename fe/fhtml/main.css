@@ -160,6 +160,7 @@ h4 {
 
 header {
 	position: sticky;
+	height: 150px;
 	width: 100%;
 	z-index: 3;
 	top: 0;
