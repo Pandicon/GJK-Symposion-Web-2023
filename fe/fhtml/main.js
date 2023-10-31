@@ -13,6 +13,22 @@ function to_harmonogram() {
 function to_contacts() {
 	window.location = "/#kontakty";
 }
+
+/*
+__     ______   ____ _   _  ___  _     
+\ \   / /  _ \ / ___| | | |/ _ \| |    
+ \ \ / /| |_) | |   | |_| | | | | |    
+  \ V / |  _ <| |___|  _  | |_| | |___ 
+   \_/  |_| \_\\____|_| |_|\___/|_____|
+*/
+const vrchol_title = 
+"  __     ______   ____ _   _  ___  _     \n" +
+"  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n" +
+"   \\ \\ / /| |_) | |   | |_| | | | | |    \n" + 
+"    \\ V / |  _ <| |___|  _  | |_| | |___ \n" + 
+"     \\_/  |_| \\_\\\\____|_| |_|\\___/|_____|";
+console.log(vrchol_title);
+
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
 const gl = canvas.getContext("webgl");
