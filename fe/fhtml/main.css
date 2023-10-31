@@ -28,7 +28,7 @@ p {
 }
 
 main {
-	padding: 20px;
+	padding: 30px;
 	background: url('/img/bg.svg') no-repeat center center fixed;
 	background-size: cover;
 	border-bottom: 1px solid black;
@@ -108,7 +108,7 @@ h4 {
 	height: 90vh;
 	left: 5vw;
 	top: 5vh;
-	background: #DBDCFF;
+	background: var(--bg_color);
 	z-index: 901;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
@@ -165,7 +165,7 @@ h4 {
 	right: 10px;
 	padding: 20px;
 	font-style: bold;
-	border: 3px solid #4D4F9B;
+	border: 3px solid #959286;
 	border-radius: 5px;
 }
 
@@ -219,8 +219,8 @@ header path {
 }
 
 .header_fg svg, .header_fg h2 {
-	filter: drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) white) drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) white)
-		drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) white);
+	filter: drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) var(--bg_color)) drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) var(--bg_color))
+		drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) var(--bg_color)) drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) var(--bg_color));
 }
 
 .header_fg svg:hover {
@@ -321,7 +321,7 @@ nav a {
 
 	header {
 		height: fit-content;
-		top: -7rem;
+		top: -4.8rem;
 	}
 
 	header canvas {
@@ -392,7 +392,7 @@ nav a {
 
 @media only screen and (max-width: 700px) {
 	header {
-		top: -16vw;
+		top: -12vw;
 	}
 
 	header canvas {
@@ -430,6 +430,10 @@ nav a {
 	#uvod .center {
 		padding: 0 0.2rem;
 	}
+
+	main{
+		padding: 10px;
+	}
 }
 
 @media only screen and (max-width: 500px) {
@@ -438,7 +442,7 @@ nav a {
 	}
 
 	header {
-		top: -17vw;
+		top: -4.2rem;
 	}
 }
 
@@ -454,10 +458,20 @@ nav a {
 	header canvas {
 		height: 32vw;
 	}
+
+	main{
+		padding: 10px;
+	}
 }
 
 @media only screen and (max-width: 350px) {
 	header {
-		top: -20vw;
+		top: -3rem;
+	}
+
+	#uvod {
+		margin-top: 1rem;
+		margin-bottom: 1rem;
+		font-size: 5.5vw;
 	}
 }

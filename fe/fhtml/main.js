@@ -31,9 +31,10 @@ console.log(vrchol_title);
 
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
-const gl = canvas.getContext("webgl");
+let gl = NaN;
+
 if (!gl) {
-	gl=canvas.getContext("experimental-webgl");
+	gl=NaN;
 }
 if (!gl) {
 	console.warn("webgl not supported, fallback to gif");
@@ -71,12 +72,12 @@ if (!gl) {
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;
 		uv.xy*=vec2(2.,4.);
-		if (resolution.x>2200.) uv.xy*=2.;
 		uv.x-=1.;
 		uv.y=uv.y+sin(tm/20.);
 		float z = wave(uv.x,uv.y)+2.0;
 		z*=2.0*(sin(tm/20.)+2.);
-		const float coef=1.5;
+		float coef=1.5;
+		if(resolution.x>2200.) coef=2.5;
 		float d2=fract(z*coef/2.);
 		float d=fract(d2*2.0);/*coef. changes the amount of lines on screen*/
 		if(d2>0.5)colbg=mix(colA, colB, (sin(uv.x*5.+tm/15.0)+1.)/2.0);
