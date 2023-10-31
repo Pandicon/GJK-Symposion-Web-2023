@@ -13,6 +13,22 @@ function to_harmonogram() {
 function to_contacts() {
 	window.location = "/#kontakty";
 }
+
+/*
+__     ______   ____ _   _  ___  _     
+\ \   / /  _ \ / ___| | | |/ _ \| |    
+ \ \ / /| |_) | |   | |_| | | | | |    
+  \ V / |  _ <| |___|  _  | |_| | |___ 
+   \_/  |_| \_\\____|_| |_|\___/|_____|
+*/
+const vrchol_title = 
+"  __     ______   ____ _   _  ___  _     \n" +
+"  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n" +
+"   \\ \\ / /| |_) | |   | |_| | | | | |    \n" + 
+"    \\ V / |  _ <| |___|  _  | |_| | |___ \n" + 
+"     \\_/  |_| \\_\\\\____|_| |_|\\___/|_____|";
+console.log(vrchol_title);
+
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
 const gl = canvas.getContext("webgl");
@@ -63,7 +79,7 @@ if (!gl) {
 		const float coef=1.5;
 		float d2=fract(z*coef/2.);
 		float d=fract(d2*2.0);/*coef. changes the amount of lines on screen*/
-		if(d2>0.5)colbg=mix(colA, colB, (sin(uv.x*5.)+1.)/2.0);
+		if(d2>0.5)colbg=mix(colA, colB, (sin(uv.x*5.+tm/15.0)+1.)/2.0);
 		vec3 col;
 		const float iters=5.0;
 		for(float i=0.; i<iters; i++){
