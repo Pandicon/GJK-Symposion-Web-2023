@@ -265,12 +265,12 @@ nav a {
 
 #harmonogram td {
 	background-color: #ffffffa0;
-	display: flex;
+	/*display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
-	text-align: center;
+	text-align: center;*/
 	border-radius: 5px;
 }
 
