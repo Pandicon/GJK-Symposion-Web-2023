@@ -251,6 +251,13 @@ nav a {
 
 #harmonogram table {
 	border-spacing: 5px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#harmonogram table td * {
+	display: block;
+	text-align: center;
 }
 
 @media only screen and (max-width: 1100px) {
@@ -287,11 +294,27 @@ nav a {
 		font-size: 2rem;
 	}
 
+	h4 {
+		font-size: 1.5rem;
+		margin: 10px;
+	}
+
+	#harmonogram table {
+		width: 700px;
+	}
+
 	#harmonogram tbody,
 	#harmonogram tr {
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
+	}
+
+	#harmonogram td {
+		padding: 5px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	#harmonogram .time {
@@ -303,7 +326,6 @@ nav a {
 	}
 
 	#harmonogram td {
-		padding: 0;
 		min-height: 5rem;
 	}
 
@@ -319,6 +341,10 @@ nav a {
 
 	#o_akci p {
 		font-size: 1rem;
+	}
+
+	#harmonogram table {
+		width: 90vw;
 	}
 }
 
