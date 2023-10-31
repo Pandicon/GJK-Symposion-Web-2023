@@ -61,6 +61,37 @@ function hide_lecture(){
 	window.history.pushState("","",urlbase+"/");
 	window.onpopstate=null;
 }
+function make_cell(td,dd,data,i,j,tmb){
+	if(dd!==null){
+		const tm=tmb+((!("rowspan"in dd)||i===0)?"":(data[i+dd.rowspan-1][0]==null?"":(" - "+data[i+dd.rowspan-1][0].title)));
+		if("rowspan"in dd){
+			td.setAttribute("rowspan",dd.rowspan);
+		}
+		if("colspan"in dd){
+			td.setAttribute("colspan",dd.colspan);
+		}
+		let l=document.createElement("span");
+		l.classList.add("lecturer");
+		l.appendChild(document.createTextNode(dd.lecturer));
+		td.appendChild(l);
+		td.appendChild(document.createElement("br"));
+		let t=document.createElement("span");
+		t.classList.add("lecture");
+		t.appendChild(document.createTextNode(dd.title));
+		td.appendChild(t);
+		if(dd.for_younger){
+			let t=document.createElement("span");
+			t.classList.add("for_younger");
+			t.appendChild(document.createTextNode("*"));
+			td.appendChild(t);
+		}
+		if(dd.id!=null){
+			td.onclick=lecture_popup(dd.lecturer,dd.title,tm,data[0][parseInt(dd.id.split("-")[2])]?.title??"",dd.id);
+			td.classList.add("clickable");
+			tt_lkp[dd.id]=td.onclick;
+		}
+	}
+}
 function make_table(div,data,dayid){
 	let tt=div.appendChild(document.createElement("h4"));
 	tt.classList.add("day_title");
@@ -72,40 +103,21 @@ function make_table(div,data,dayid){
 		const tr=table.insertRow();
 		const tmb=i===0?"":(days[dayid]+" "+(data[i-1][0]===null?"":data[i-1][0].title));
 		for(let j=0;j<dr.length;j++){
-			const dd=dr[j];
+			let dd=dr[j];
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
-			if(j==0){td.classList.add("time");}
-			if(dd!==null){
-				const tm=tmb+((!("rowspan"in dd)||i===0)?"":(data[i+dd.rowspan-1][0]==null?"":(" - "+data[i+dd.rowspan-1][0].title)));
-				if("rowspan"in dd){
-					td.setAttribute("rowspan",dd.rowspan);
-				}
-				if("colspan"in dd){
-					td.setAttribute("colspan",dd.colspan);
-				}
-				let l=document.createElement("span");
-				l.classList.add("lecturer");
-				l.appendChild(document.createTextNode(dd.lecturer));
-				td.appendChild(l);
-				td.appendChild(document.createElement("br"));
-				let t=document.createElement("span");
-				t.classList.add("lecture");
-				t.appendChild(document.createTextNode(dd.title));
-				td.appendChild(t);
-				if(dd.for_younger){
-					let t=document.createElement("span");
-					t.classList.add("for_younger");
-					t.appendChild(document.createTextNode("*"));
-					td.appendChild(t);
-				}
-				if(dd.id!=null){
-					td.onclick=lecture_popup(dd.lecturer,dd.title,tm,data[0][parseInt(dd.id.split("-")[2])]?.title??"",dd.id);
-					td.classList.add("clickable");
-					tt_lkp[dd.id]=td.onclick;
-				}
+			if(j==0){
+				td.classList.add("time");
+				if(i==0)
+					dd=null;
+				else
+					dd=data[i-1][0];
 			}
+			make_cell(td,dd,data,i,j,tmb);
 		}
 	}
+	let etd=table.insertRow().appendChild(document.createElement("th"));
+	etd.classList.add("time");
+	make_cell(etd,data[data.length-1][0],data,1,0,"");
 }
 async function gen_tables(){
 	let tables_div=document.getElementById("harmonogram_tables");
