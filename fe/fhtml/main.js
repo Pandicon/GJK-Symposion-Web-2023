@@ -47,7 +47,9 @@ if (!gl) {
 			   sin(x)/4.0;
 	}
 	void main(){
-		const vec3 col1=vec3(0.97, 0.96, 0.87);
+		const vec3 colA=vec3(0.53,0.46,0.68);
+		const vec3 colB=vec3(0.21,0.12,0.37);
+		vec3 colbg=vec3(0.85);
 		const vec3 col2=vec3(0.2);
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
@@ -57,14 +59,17 @@ if (!gl) {
 		uv.y=uv.y+sin(tm/20.);
 		float z = wave(uv.x,uv.y)+2.0;
 		z*=2.0*(sin(tm/20.)+2.);
-		float d=fract(z*1.5);/*coef. changes the amount of lines on screen*/
-		if(mod(z,2.0)>1.)d=1.-d;
+		const float coef=1.5;
+		float d2=fract(z*coef/2.);
+		float d=fract(d2*2.0);/*coef. changes the amount of lines on screen*/
+		if(d2>0.5)colbg=mix(colA, colB, (sin(uv.x*5.)+1.)/2.0);
 		vec3 col;
-		for(float i=0.; i<5.; i++){
-			col += vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),0.5+1.-(i+1.)/3.)*((i+1.)/5.));
+		const float iters=5.0;
+		for(float i=0.; i<iters; i++){
+			col += vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),1.5-(i+1.)/3.)*((i+1.)/iters));
 		}
 		col = clamp(col *-1. + 1., 0., 1.);
-		col = mix(col2, col1, col);
+		col = mix(col2, colbg, col);
 		gl_FragColor=vec4(col,1.);
 	}`;
 	function make_sh(tp,src) {
