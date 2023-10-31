@@ -56,15 +56,10 @@ if (!gl) {
 			   sin(x)/4.0;
 	}
 	void main(){
-<<<<<<< Updated upstream
 		const vec3 colA=vec3(0.53,0.46,0.68);
 		const vec3 colB=vec3(0.21,0.12,0.37);
 		vec3 colbg=vec3(0.85);
 		const vec3 col2=vec3(0.2);
-=======
-		const vec3 col1=vec3(0.97, 0.96, 0.87);
-		const vec3 col2=vec3(0.5);
->>>>>>> Stashed changes
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;

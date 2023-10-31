@@ -3,7 +3,7 @@
 	--bg_color: var(--bg_colour);
 	--header_text_outline1: 2px;
 	--header_text_outline2: -2px;
-	--header_shadow_blur: 1px;
+	--header_shadow_blur: 3px;
 }
 
 a {
@@ -74,7 +74,7 @@ h4 {
 #uvod .center {
 	text-align: center;
 	vertical-align: top;
-	color: #9B1B8B;
+	color: #7356ba;
 	padding: 0 0.5rem;
 	-webkit-text-stroke: 1px black;
 }
@@ -162,11 +162,8 @@ header {
 	position: sticky;
 	width: 100%;
 	z-index: 3;
-<<<<<<< Updated upstream
 	top: 0;
-=======
 	border-bottom: black 3px;
->>>>>>> Stashed changes
 }
 
 #header_bg {
@@ -177,13 +174,11 @@ header {
 	left: 0;
 }
 
-<<<<<<< Updated upstream
 header canvas {
-	border-radius: 0px 0px 25px 25px;
 	box-shadow: 0px 0px 20px #2a2a2a;
-=======
+}
+
 #hbg_canvas {
->>>>>>> Stashed changes
 	height: 100%;
 	width: 100%;
 }
@@ -213,8 +208,7 @@ header path {
 .header_fg svg, .header_fg h2 {
 	filter: drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) white) drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) white)
 		drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) white)
-		drop-shadow(var(--header_text_outline1) var(--header_text_outline1) var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) var(--header_text_outline1) var(--header_shadow_blur) white)
-		drop-shadow(var(--header_text_outline1) var(--header_text_outline2) var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) var(--header_text_outline2) var(--header_shadow_blur) white);
+		;
 }
 
 .header_fg svg:hover {
@@ -230,7 +224,6 @@ header path {
 	flex-shrink: 3;
 }
 
-<<<<<<< Updated upstream
 .header_fg h2 {
 	align-self: flex-end;
 	transform: translateX(-50px);
@@ -240,8 +233,6 @@ header path {
 	text-shadow: 0px 0px 2px#F8F4DE;
 }
 
-=======
->>>>>>> Stashed changes
 nav {
 	background-color: var(--bg_colour);
 	border-bottom: 1px solid #361F5F;
@@ -273,13 +264,13 @@ nav a {
 
 #harmonogram td {
 	background-color: #ffffffa0;
-	border-radius: 5px;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
 	text-align: center;
+	border-radius: 5px;
 }
 
 #harmonogram table {
