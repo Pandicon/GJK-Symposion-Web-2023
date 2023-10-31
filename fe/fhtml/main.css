@@ -19,6 +19,10 @@ body {
 	overflow-x: hidden;
 }
 
+p {
+	font-size: 1.5em;
+}
+
 main {
 	margin: 20px;
 }
@@ -31,6 +35,14 @@ h3 {
 h4 {
 	font-size: 2.5em;
 	margin: 20px;
+}
+#bg_contour_lines {
+	position: fixed;
+	z-index: -1;
+	opacity: 30%;
+}
+#bg_contour_lines path {
+	fill:#888;
 }
 
 #uvod {
@@ -85,11 +97,14 @@ h4 {
 	height: 90vh;
 	left: 5vw;
 	top: 5vh;
-	background: #cdbeed;
+	background: #F8F4DE;
 	z-index: 901;
 	overflow-y: scroll;
 	overscroll-behavior: contain;
 	border-radius: 10px;
+}
+#ov_container{
+	margin:10px;
 }
 
 #ov_lecturer {
@@ -147,7 +162,11 @@ header {
 	position: sticky;
 	width: 100%;
 	z-index: 3;
+<<<<<<< Updated upstream
 	top: 0;
+=======
+	border-bottom: black 3px;
+>>>>>>> Stashed changes
 }
 
 #header_bg {
@@ -158,9 +177,13 @@ header {
 	left: 0;
 }
 
+<<<<<<< Updated upstream
 header canvas {
 	border-radius: 0px 0px 25px 25px;
 	box-shadow: 0px 0px 20px #2a2a2a;
+=======
+#hbg_canvas {
+>>>>>>> Stashed changes
 	height: 100%;
 	width: 100%;
 }
@@ -174,10 +197,11 @@ header canvas {
 	justify-content: left;
 	align-items: center;
 	gap: 20px;
+	border-bottom: solid 3px #888;
 }
 
 .vrchol_svg {
-	height: 100px;
+	height: 85px;
 	width: 200px;
 	padding-left: 20px;
 	flex-shrink: 0;
@@ -206,6 +230,7 @@ header path {
 	flex-shrink: 3;
 }
 
+<<<<<<< Updated upstream
 .header_fg h2 {
 	align-self: flex-end;
 	transform: translateX(-50px);
@@ -215,6 +240,8 @@ header path {
 	text-shadow: 0px 0px 2px#F8F4DE;
 }
 
+=======
+>>>>>>> Stashed changes
 nav {
 	background-color: var(--bg_colour);
 	border-bottom: 1px solid #361F5F;
@@ -227,7 +254,7 @@ nav a {
 }
 
 .header_pad {
-	height: 120px;
+	height: 100px;
 }
 
 .lecturer {
@@ -247,10 +274,15 @@ nav a {
 #harmonogram td {
 	background-color: #ffffffa0;
 	border-radius: 5px;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	text-align: center;
 }
 
 #harmonogram table {
-	border: 1px solid #8775AE;
 	padding-bottom: 20px;
 }
 
@@ -281,14 +313,9 @@ nav a {
 		padding-right: 20px;
 	}
 
-	.header_fg h2 {
-		align-self: center;
-		transform: translate(0, -40px);
-	}
-
 	.header_fg .content_links {
 		margin-right: auto;
-		transform: translate(0px, -40px);
+		padding-bottom: 10px;
 	}
 
 	header {
@@ -301,7 +328,7 @@ nav a {
 	}
 
 	.header_pad {
-		height: 220px;
+		height: 200px;
 	}
 
 	h3 {

@@ -13,6 +13,15 @@ function to_harmonogram() {
 function to_contacts() {
 	window.location = "/#kontakty";
 }
+console.log(window.innerWidth, window.innerHeight);
+if(window.innerWidth>=window.innerHeight){ /* pls somebody make this run everytime the screen rotation changes */
+	document.getElementById("bg_contour_lines").style.width = "100vw";
+	document.getElementById("bg_contour_lines").style.height = "auto";
+}
+else{
+	document.getElementById("bg_contour_lines").style.width = "auto";
+	document.getElementById("bg_contour_lines").style.height = "100vh";
+}
 
 const canvas=document.getElementById("hbg_canvas");
 const gl = canvas.getContext("webgl");
@@ -47,10 +56,15 @@ if (!gl) {
 			   sin(x)/4.0;
 	}
 	void main(){
+<<<<<<< Updated upstream
 		const vec3 colA=vec3(0.53,0.46,0.68);
 		const vec3 colB=vec3(0.21,0.12,0.37);
 		vec3 colbg=vec3(0.85);
 		const vec3 col2=vec3(0.2);
+=======
+		const vec3 col1=vec3(0.97, 0.96, 0.87);
+		const vec3 col2=vec3(0.5);
+>>>>>>> Stashed changes
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;
@@ -114,15 +128,15 @@ if (!gl) {
 	document.onmousedown=function(){tms=1.3;tmh=12.0;};
 	document.onmouseup=function(){tms=0.3;tmh=6.0;};
 	function render(){
-		canvas.width = window.innerWidth;
-		canvas.height = window.innerWidth>1100? 100 : 200;
+		canvas.width = window.innerWidth*2.;
+		canvas.height = window.innerWidth>1100? 200 : 400;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
 		ms=(tms+ms)*0.5;
 		mh=(tmh+mh)*0.5;
 		gl.uniform1f(ms_loc,ms);
 		gl.uniform1f(mh_loc,mh);
-		gl.uniform1f(tm_loc,time*0.0001);
+		gl.uniform1f(tm_loc,time*0.001);
 		gl.uniform2f(sh.resolution, canvas.width, canvas.height);
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		setTimeout(function(){requestAnimationFrame(render);},50);
