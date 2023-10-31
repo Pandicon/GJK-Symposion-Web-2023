@@ -1,6 +1,9 @@
 :root {
 	--bg_colour: #E6E6E6;
 	--bg_color: var(--bg_colour);
+	--header_text_outline1: 2px;
+	--header_text_outline2: -2px;
+	--header_shadow_blur: 1px;
 }
 
 a {
@@ -179,9 +182,15 @@ header canvas {
 	padding-left: 20px;
 	flex-shrink: 0;
 }
+header path {
+	fill: #7356ba;
+}
 
-.header_fg path {
-	filter: drop-shadow(0px 0px 1px rgba(248, 244, 222, 1));
+.header_fg svg, .header_fg h2 {
+	filter: drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) white) drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) white)
+		drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) white)
+		drop-shadow(var(--header_text_outline1) var(--header_text_outline1) var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) var(--header_text_outline1) var(--header_shadow_blur) white)
+		drop-shadow(var(--header_text_outline1) var(--header_text_outline2) var(--header_shadow_blur) white) drop-shadow(var(--header_text_outline2) var(--header_text_outline2) var(--header_shadow_blur) white);
 }
 
 .header_fg svg:hover {
@@ -202,7 +211,7 @@ header canvas {
 	transform: translateX(-50px);
 	margin-bottom: 10px;
 	flex-shrink: 0;
-	color: #d95eca;
+	color: #7356ba;
 	text-shadow: 0px 0px 2px#F8F4DE;
 }
 
