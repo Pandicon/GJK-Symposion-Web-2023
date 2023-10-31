@@ -48,7 +48,7 @@ if (!gl) {
 	}
 	void main(){
 		const vec3 col1=vec3(0.97, 0.96, 0.87);
-		const vec3 col2=vec3(0.5);
+		const vec3 col2=vec3(0.2);
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
 		float aspect=resolution.x/resolution.y;
 		uv.y/=aspect;
