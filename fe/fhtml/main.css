@@ -186,10 +186,6 @@ header {
 	left: 0;
 }
 
-/* header canvas {
-	box-shadow: 0px 0px 20px #2a2a2a;
-} */
-
 #hbg_canvas {
 	height: 100%;
 	width: 100%;
@@ -304,7 +300,7 @@ nav a {
 		height: 100vh;
 		width: auto;
 	}
-	/*for semi large devices*/
+	
 	.header_fg {
 		flex-direction: column;
 		gap: 0px;

@@ -31,10 +31,10 @@ console.log(vrchol_title);
 
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
-let gl = NaN;
+let gl = canvas.getContext("webgl");
 
 if (!gl) {
-	gl=NaN;
+	gl=canvas.getContext("experimental-webgl");
 }
 if (!gl) {
 	console.warn("webgl not supported, fallback to gif");
