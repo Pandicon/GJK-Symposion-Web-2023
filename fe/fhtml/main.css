@@ -57,7 +57,7 @@ h4 {
 	text-align: right;
 	vertical-align: top;
 	width: 250px;
-	color: #F8F4DE;
+	color: #9EA2EF;
 	-webkit-text-stroke: 1px black;
 }
 
@@ -65,14 +65,14 @@ h4 {
 	text-align: left;
 	vertical-align: top;
 	width: 250px;
-	color: #F8F4DE;
+	color: #9EA2EF;
 	-webkit-text-stroke: 1px black;
 }
 
 #uvod .center {
 	text-align: center;
 	vertical-align: top;
-	color: #7356ba;
+	color: #464893;
 	padding: 0 0.5rem;
 	-webkit-text-stroke: 1px black;
 }
@@ -201,7 +201,7 @@ header canvas {
 	flex-shrink: 0;
 }
 header path {
-	fill: #7356ba;
+	fill: #6B6ED1;
 }
 
 .header_fg svg, .header_fg h2 {
