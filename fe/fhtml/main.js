@@ -64,8 +64,8 @@ if (!gl) {
 			   sin(x)/4.0;
 	}
 	void main(){
-		const vec3 colA=vec3(0.53,0.46,0.68);
-		const vec3 colB=vec3(0.21,0.12,0.37);
+		const vec3 colA=vec3(0.50, 0.51, 0.68);
+		const vec3 colB=vec3(0.18, 0.18, 0.35);
 		vec3 colbg=vec3(249./255., 243./255., 222./255.);
 		const vec3 col2=vec3(0.2);
 		vec2 uv=gl_FragCoord.xy/resolution.xy;
