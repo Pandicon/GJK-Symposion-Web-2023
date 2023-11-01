@@ -36,10 +36,14 @@ let gl = canvas.getContext("webgl");
 if (!gl) {
 	gl=canvas.getContext("experimental-webgl");
 }
+gl = null;
 if (!gl) {
 	console.warn("webgl not supported, fallback to gif");
-	let si=document.getElementById("header_bg").appendChild(document.createElement("img"));
-	si.src="/img/baked_bg.gif";
+	document.getElementById("header_bg").style="background: url('/img/baked_bg.gif') no-repeat center center fixed;background-size:cover;width:100%;height:auto;";
+	/*let gif_node = document.createElement("img");
+	gif_node.id = "baked_bg"
+	gif_node.src="/img/baked_bg.gif";
+	document.getElementById("header_bg").prepend(gif_node);*/
 } else {
 	gl.getExtension("OES_standard_derivatives");
 	console.log("using webgl");
