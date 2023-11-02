@@ -125,13 +125,28 @@ async function gen_tables(){
 		tables_div.removeChild(tables_div.lastChild);
 	}
 	const data=await cfetch("harmonogram");
-	const hd=data.data.harmonogram;
-	for(let i=0;i<hd.length;i++){
-		make_table(tables_div,hd[i].harmonogram,i);
+	if(data){
+		if("note"in data.data){
+			let n=tables_div.appendChild(document.createElement("span"));
+			n.classList.add("tt_note");
+			n.textContent=data.data.note;
+		}
+		const hd=data.data.harmonogram;
+		if(hd){
+			for(let i=0;i<hd.length;i++){
+				make_table(tables_div,hd[i].harmonogram,i);
+			}
+			let tu=tables_div.appendChild(document.createElement("span"));
+			tu.classList.add("last_update");
+			tu.textContent="Data z "+format_update(data.data.last_updated);
+			t.classList.add("tt_unfinished");
+			t.textContent="Harmonogram ještě není finální";
+		}
+	} else {
+		let n=tables_div.appendChild(document.createElement("span"));
+		n.classList.add("error_text");
+		n.textContent="Nepodařilo se načíst harmonogram.";
 	}
-	let tu=tables_div.appendChild(document.createElement("span"));
-	tu.classList.add("last_update");
-	tu.textContent="Data z "+format_update(data.data.last_updated);
 	tt_ld=true;
 }
 gen_tables();
