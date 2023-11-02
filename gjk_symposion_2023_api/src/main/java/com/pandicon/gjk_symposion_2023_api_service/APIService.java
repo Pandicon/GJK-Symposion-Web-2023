@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pandicon.gjk_symposion_2023_api.api_model.*;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ class Settings {
 @Service
 public class APIService {
     private long last_harmonogram_cache_update;
+    private boolean is_harmonogram_public;
+    private String public_harmonogram_note;
+    private String private_harmonogram_note;
+
     private List<Table> harmonogram_cache;
     private List<HashMap<String, AdditionalData>> annotations_per_day_cache;
     private HashMap<String, AdditionalData> annotations_cache;
@@ -31,6 +36,9 @@ public class APIService {
     final private long cache_refresh_cooldown_ms;
     public APIService() {
         this.last_harmonogram_cache_update = 0;
+        this.is_harmonogram_public = true;
+        this.public_harmonogram_note = "";
+        this.private_harmonogram_note = "";
         this.harmonogram_cache = new ArrayList<Table>();
         this.annotations_per_day_cache = new ArrayList<>();
         this.annotations_cache = new HashMap<>();
@@ -62,14 +70,18 @@ public class APIService {
         System.out.println("Fetching harmonogram :D");
         this.last_harmonogram_cache_update = new Date().getTime();
         TableAndAnnotationsParser table_and_annotations_parser = new TableAndAnnotationsParser(this.sheet_url, this.cell_content_to_be_considered_empty);
-        Optional<Pair<List<HashMap<String, AdditionalData>>, List<Table>>> data_opt = table_and_annotations_parser.get_data();
+        Optional<Triplet<PublicData, List<HashMap<String, AdditionalData>>, List<Table>>> data_opt = table_and_annotations_parser.get_data();
         if(data_opt.isEmpty()) {
             System.err.println("Failed to get table data");
             return;
         }
-        Pair<List<HashMap<String, AdditionalData>>, List<Table>> data = data_opt.get();
-        this.harmonogram_cache = data.getValue1();
-        List<HashMap<String, AdditionalData>> annotations = data.getValue0();
+        Triplet<PublicData, List<HashMap<String, AdditionalData>>, List<Table>> data = data_opt.get();
+        PublicData public_data = data.getValue0();
+        this.is_harmonogram_public = public_data.is_public;
+        this.public_harmonogram_note = public_data.public_text;
+        this.private_harmonogram_note = public_data.not_public_text;
+        this.harmonogram_cache = data.getValue2();
+        List<HashMap<String, AdditionalData>> annotations = data.getValue1();
         this.annotations_per_day_cache = annotations;
         HashMap<String, AdditionalData> annotations_merged = new HashMap<>();
         for(HashMap<String, AdditionalData> day_annotations : annotations) {
@@ -126,7 +138,13 @@ public class APIService {
             harmonogram_days = this.harmonogram_cache;
         }
         Map<String, Object> response = new HashMap<>();
-        response.put("data", new TableResponse(this.last_harmonogram_cache_update, harmonogram_days));
+        String note = this.private_harmonogram_note;
+        Optional<List<Table>> table = Optional.empty();
+        if(this.is_harmonogram_public) {
+            note = this.public_harmonogram_note;
+            table = Optional.of(harmonogram_days);
+        }
+        response.put("data", new TableResponse(this.last_harmonogram_cache_update, table, note));
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -136,6 +154,11 @@ public class APIService {
         }
         if(this.annotations_cache.isEmpty()) {
             this.fetch_harmonogram();
+        }
+        if(!this.is_harmonogram_public) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("data", new HashMap<>());
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
         if(days.isEmpty() && ids.isEmpty()) {
             if(this.annotations_cache.isEmpty()) {

@@ -5,6 +5,7 @@ import com.pandicon.gjk_symposion_2023_api.api_model.AdditionalData;
 import com.pandicon.gjk_symposion_2023_api.api_model.Table;
 import com.pandicon.gjk_symposion_2023_api.api_model.TableCell;
 import org.javatuples.Pair;
+import org.javatuples.Triplet;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -234,7 +235,7 @@ public class TableAndAnnotationsParser {
         return Optional.of(Pair.with(annotations, new Table(date, table_rows)));
     }
 
-    public Optional<Pair<List<HashMap<String, AdditionalData>>, List<Table>>> get_data() {
+    public Optional<Triplet<PublicData, List<HashMap<String, AdditionalData>>, List<Table>>> get_data() {
         final Optional<String> csv_data_opt = this.load_data();
         if(csv_data_opt.isEmpty()) {
             System.out.println("Failed to get the sheet.");
@@ -259,6 +260,9 @@ public class TableAndAnnotationsParser {
         int annotation_i = 0;
         int lecturer_info_i = 0;
         int for_younger_i = 0;
+        int is_public_i = 0;
+        int public_note_i = 0;
+        int not_public_note_i = 0;
 
         int top_row_fields = 0;
         int room_annotations_start = 0;
@@ -282,6 +286,12 @@ public class TableAndAnnotationsParser {
                 lecturer_info_i = top_row_fields;
             } else if(cut_lower.startsWith("vhodné")) {
                 for_younger_i = top_row_fields;
+            } else if(cut_lower.startsWith("veřejný")) {
+                is_public_i = top_row_fields;
+            } else if(cut_lower.startsWith("text veřejný")) {
+                public_note_i = top_row_fields;
+            } else if(cut_lower.startsWith("text neveřejný")) {
+                not_public_note_i = top_row_fields;
             }
             top_row_fields += 1;
         }
@@ -308,6 +318,18 @@ public class TableAndAnnotationsParser {
             room_to_column.put(csv.get(0).get(i), i - room_annotations_start);
             rooms_annotations.put(csv.get(0).get(i), csv.get(1).get(i));
         }
+        for(int i = room_annotations_start + room_annotations; i < csv.get(0).size(); i += 1) {
+            final String cut_lower = csv.get(0).get(i).trim().toLowerCase();
+            if(cut_lower.startsWith("veřejný")) {
+                is_public_i = i;
+            } else if(cut_lower.startsWith("text veřejný")) {
+                public_note_i = i;
+            } else if(cut_lower.startsWith("text neveřejný")) {
+                not_public_note_i = i;
+            }
+        }
+        PublicData public_data = new PublicData(csv.get(1).get(is_public_i).trim().equalsIgnoreCase("ano"), csv.get(1).get(public_note_i), csv.get(1).get(not_public_note_i));
+        System.out.println(public_data.is_public + " " + csv.get(1).get(is_public_i).trim() + " " + is_public_i + " " + public_data.public_text + " " + public_note_i + " " + public_data.not_public_text + " " + not_public_note_i);
         System.out.println(rooms.toString() + " " + rooms_annotations.toString());
         System.out.println(lecturer_i + " " + time_i + " " + place_i + " " + title_i + " " + annotation_i + " " + lecturer_info_i + " " + for_younger_i);
 
@@ -364,6 +386,6 @@ public class TableAndAnnotationsParser {
         * Convert Lecture objects into TableCells, saving their annotations in a different cache by their day-row-column id
         * */
 
-        return Optional.of(Pair.with(annotations, tables));
+        return Optional.of(Triplet.with(public_data, annotations, tables));
     }
 }
