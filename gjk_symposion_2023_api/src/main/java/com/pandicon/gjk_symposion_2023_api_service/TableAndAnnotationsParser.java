@@ -349,11 +349,13 @@ public class TableAndAnnotationsParser {
         List<List<Lecture>> lecture_days = new ArrayList<>();
         String current_date = "";
         List<String> dates = new ArrayList<>();
+        List<String> days = new ArrayList<>();
         for(Lecture lecture : all_lectures) {
             if(!Objects.equals(current_date, lecture.date)) {
                 lecture_days.add(new ArrayList<>());
                 current_date = lecture.date;
                 dates.add(current_date);
+                days.add(lecture.day);
             }
             lecture_days.get(lecture_days.size() - 1).add(lecture);
             System.out.println(lecture.date + " " + lecture.day + " " + lecture.lecturer + " " + lecture.for_younger);
@@ -363,7 +365,7 @@ public class TableAndAnnotationsParser {
         List<Table> tables = new ArrayList<>();
         List<HashMap<String, AdditionalData>> annotations = new ArrayList<>();
         for(int i = 0; i < lecture_days.size(); i += 1) {
-            Optional<Pair<HashMap<String, AdditionalData>, Table>> pair_opt = this.handle_day(i, dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
+            Optional<Pair<HashMap<String, AdditionalData>, Table>> pair_opt = this.handle_day(i, days.get(i) + " " + dates.get(i), lecture_days.get(i), rooms, rooms_annotations);
             if(pair_opt.isEmpty()) {
                 System.err.println("Failed to parse table for day " + dates.get(i));
                 return Optional.empty();
