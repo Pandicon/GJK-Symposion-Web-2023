@@ -1,16 +1,20 @@
 :root {
-	--bg_colour:#F9F3DE;
-	--bg_color:var(--bg_colour);
-	--header_text_outline1:2px;
-	--header_text_outline2:-2px;
-	--header_shadow_blur:0px;
-	--header_text_outlineB1:3px;
-	--header_text_outlineB2:-3px;
-	--header_shadow_blurB:2px;
+	--bg_colour: #F9F3DE;
+	--bg_color: var(--bg_colour);
+	--header_text_outline1: 2px;
+	--header_text_outline2: -2px;
+	--header_shadow_blur: 0px;
+	--header_text_outlineB1: 3px;
+	--header_text_outlineB2: -3px;
+	--header_shadow_blurB: 2px;
 }
 
 * {
 	font-family: 'Roboto', serif;
+}
+
+html {
+	scroll-behavior: smooth;
 }
 
 a {
@@ -56,7 +60,7 @@ h4 {
 }
 
 #bg_contour_lines path {
-	fill:#888;
+	fill: #888;
 }
 
 #uvod {
@@ -117,8 +121,9 @@ h4 {
 	overscroll-behavior: contain;
 	border-radius: 10px;
 }
-#ov_container{
-	margin:10px;
+
+#ov_container {
+	margin: 10px;
 }
 
 #ov_lecturer {
@@ -214,40 +219,39 @@ header {
 	padding-top: 10px;
 }
 
-h1{
-	height:100%;
-	width:auto;
-	padding-left:20px;
-	flex-shrink:0;
-	font-size:80px;
+h1 {
+	height: 100%;
+	width: auto;
+	padding-left: 20px;
+	flex-shrink: 0;
+	font-size: 80px;
 }
-.title h2{
-	font-size:18px;
+
+.title h2 {
+	font-size: 18px;
 }
-.content_links h2{
-	font-size:40px;
+
+.content_links h2 {
+	font-size: 40px;
+	white-space: nowrap;
+	cursor: pointer;
 }
 
 header path {
 	fill: #333573;
 }
 
-.header_fg svg,.header_fg h1,.header_fg h2{
-	filter:drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) var(--bg_color))
-		drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) var(--bg_color))
-		drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) var(--bg_color))
-		drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) var(--bg_color))
-		drop-shadow(0px var(--header_text_outlineB1) var(--header_shadow_blurB) var(--bg_color))
-		drop-shadow(0px var(--header_text_outlineB2) var(--header_shadow_blurB) var(--bg_color))
-		drop-shadow(var(--header_text_outlineB1) 0px var(--header_shadow_blurB) var(--bg_color))
-		drop-shadow(var(--header_text_outlineB2) 0px var(--header_shadow_blurB) var(--bg_color));
+.header_fg svg,
+.header_fg h1,
+.header_fg h2 {
+	filter: drop-shadow(0px var(--header_text_outline1) var(--header_shadow_blur) var(--bg_color)) drop-shadow(0px var(--header_text_outline2) var(--header_shadow_blur) var(--bg_color)) drop-shadow(var(--header_text_outline1) 0px var(--header_shadow_blur) var(--bg_color)) drop-shadow(var(--header_text_outline2) 0px var(--header_shadow_blur) var(--bg_color)) drop-shadow(0px var(--header_text_outlineB1) var(--header_shadow_blurB) var(--bg_color)) drop-shadow(0px var(--header_text_outlineB2) var(--header_shadow_blurB) var(--bg_color)) drop-shadow(var(--header_text_outlineB1) 0px var(--header_shadow_blurB) var(--bg_color)) drop-shadow(var(--header_text_outlineB2) 0px var(--header_shadow_blurB) var(--bg_color));
 }
 
-.header_fg svg:hover{
+.header_fg svg:hover {
 	cursor: pointer;
 }
 
-.header_fg .content_links{
+.header_fg .content_links {
 	margin-left: auto;
 	height: 100%;
 	display: flex;
@@ -256,8 +260,9 @@ header path {
 	flex-shrink: 3;
 }
 
-.header_fg h1,.header_fg h2 {
-	display:inline;
+.header_fg h1,
+.header_fg h2 {
+	display: inline;
 	color: #7356ba;
 	margin: 20px;
 }
@@ -316,38 +321,71 @@ nav a {
 	text-align: center;
 }
 
+@media only screen and (max-width:1450px) and (min-width: 1140px) {
+
+	#o_akci,
+	#harmonogram,
+	#kontakty {
+		scroll-margin-top: 170px;
+	}
+
+	.title h1 {
+		margin-bottom: 0;
+	}
+
+	.title h2 {
+		display: block;
+		margin: 0 0 5px 40px;
+	}
+}
+
 @media only screen and (max-width:1250px) {
-	.header_fg{
-		padding-top:0px;
-		padding-bottom:0px;
+
+	#o_akci,
+	#harmonogram,
+	#kontakty {
+		scroll-margin-top: 140px;
 	}
-	h1{
-		font-size:75px;
+
+	.header_fg {
+		padding-top: 0px;
+		padding-bottom: 0px;
 	}
-	.title h2{
-		font-size:15px;
+
+	h1 {
+		font-size: 75px;
 	}
-	.header_fg .content_links{
-		margin:10px auto 10px auto;
-		display:block;
-		width:fit-content;
-		height:fit-content;
+
+	.title h2 {
+		font-size: 15px;
 	}
-	.content_links h2{
-		font-size:35px;
+
+	.header_fg .content_links {
+		margin: 10px auto 10px auto;
+		display: block;
+		width: fit-content;
+		height: fit-content;
+	}
+
+	.content_links h2 {
+		font-size: 35px;
 	}
 }
-@media only screen and (max-width:1200px) {
-	.title h2{
-		margin:0px;
+
+
+@media only screen and (max-width: 1140px) {
+
+	#o_akci,
+	#harmonogram,
+	#kontakty {
+		scroll-margin-top: 90px;
 	}
-}
-@media only screen and (max-width: 1100px) {
+
 	#bg_contour_lines {
 		height: 100vh;
 		width: auto;
 	}
-	
+
 	.header_fg {
 		flex-direction: column;
 		gap: 0px;
@@ -363,7 +401,7 @@ nav a {
 
 	header {
 		height: fit-content;
-		top: -4.8rem;
+		top: -6.2rem;
 	}
 
 	header canvas {
@@ -423,6 +461,10 @@ nav a {
 		font-size: 1.5rem;
 	}
 
+	.content_links h2 {
+		font-size: 30px;
+	}
+
 	#o_akci p {
 		font-size: 1rem;
 	}
@@ -433,8 +475,15 @@ nav a {
 }
 
 @media only screen and (max-width: 700px) {
+
+	#o_akci,
+	#harmonogram,
+	#kontakty {
+		scroll-margin-top: 14vw;
+	}
+
 	header {
-		top: -12vw;
+		top: -100px;
 	}
 
 	header canvas {
@@ -453,10 +502,11 @@ nav a {
 		height: 10vw;
 	}
 
-	.header_fg h2 {
-		font-size: 3vw;
+	.content_links h2 {
+		font-size: 4vw;
 		transform: translate(-10vw, -3vw);
 	}
+
 	#uvod {
 		margin-top: 3rem;
 		margin-bottom: 3rem;
@@ -467,25 +517,29 @@ nav a {
 		padding: 0 0.2rem;
 	}
 
-	main{
+	main {
 		padding: 10px;
 	}
 }
 
-@media only screen and (max-width: 500px) {
+@media only screen and (max-width: 540px) {
 	h1 {
 		margin-left: -1rem;
 	}
 
-	header {
-		top: -4.2rem;
-	}
-	.title h2{
-		display:none;
+	.title h2 {
+		display: none;
 	}
 }
 
 @media only screen and (max-width: 400px) {
+
+	#o_akci,
+	#harmonogram,
+	#kontakty {
+		scroll-margin-top: 20vw;
+	}
+
 	h3 {
 		font-size: 1.3rem;
 	}
@@ -498,14 +552,19 @@ nav a {
 		height: 32vw;
 	}
 
-	main{
+	main {
 		padding: 10px;
+	}
+
+	.content_links h2 {
+		margin-left: 10px;
+		margin-right: 10px;
 	}
 }
 
 @media only screen and (max-width: 350px) {
 	header {
-		top: -3rem;
+		top: -65px;
 	}
 
 	#uvod {
@@ -513,7 +572,8 @@ nav a {
 		margin-bottom: 1rem;
 		font-size: 5.5vw;
 	}
-	h1{
-		font-size:50px;
+
+	h1 {
+		font-size: 50px;
 	}
 }
