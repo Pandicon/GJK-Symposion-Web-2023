@@ -10,7 +10,7 @@
 }
 
 * {
-	font-family: 'Roboto', serif;
+	font-family: "Oswald", serif;
 }
 
 html {
@@ -204,6 +204,11 @@ header {
 #hbg_canvas {
 	height: 100%;
 	width: 100%;
+}
+
+.header_bg_nogl {
+	background: url('/img/baked_bg.gif') no-repeat center center;
+	background-size:cover;
 }
 
 .header_fg {
@@ -402,7 +407,7 @@ nav a {
 
 	header {
 		height: fit-content;
-		top: -6.2rem;
+		top: -7.2rem;
 	}
 
 	header canvas {
