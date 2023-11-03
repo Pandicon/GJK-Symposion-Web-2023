@@ -10,7 +10,7 @@
 }
 
 * {
-	font-family: "Oswald", serif;
+	font-family: "Oswald", serif, system-ui;
 }
 
 html {
@@ -327,6 +327,17 @@ nav a {
 	text-align: center;
 }
 
+#harmonogram .day_title {
+	text-align: center;
+}
+
+.contacts_wrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: stretch;
+}
+
 @media only screen and (max-width:1450px) and (min-width: 1140px) {
 
 	#o_akci,
@@ -407,7 +418,7 @@ nav a {
 
 	header {
 		height: fit-content;
-		top: -7.2rem;
+		top: -7rem;
 	}
 
 	header canvas {
@@ -459,6 +470,11 @@ nav a {
 
 	#harmonogram td:empty {
 		display: none;
+	}
+
+	.contacts_wrapper {
+		flex-direction: column;
+		align-items: center;
 	}
 }
 
