@@ -69,11 +69,13 @@ function make_cell(td,dd,data,i,j,tmb){
 		if("colspan"in dd){
 			td.setAttribute("colspan",dd.colspan);
 		}
-		let l=document.createElement("span");
-		l.classList.add("lecturer");
-		l.appendChild(document.createTextNode(dd.lecturer));
-		td.appendChild(l);
-		td.appendChild(document.createElement("br"));
+		if(j>0){
+			let l=document.createElement("span");
+			l.classList.add("lecturer");
+			l.appendChild(document.createTextNode(dd.lecturer));
+			td.appendChild(l);
+			td.appendChild(document.createElement("br"));
+		}
 		let t=document.createElement("span");
 		t.classList.add("lecture");
 		t.appendChild(document.createTextNode(dd.title));

@@ -313,7 +313,7 @@ nav a {
 }
 
 #harmonogram .time {
-	transform: translateY(-60%);
+	transform: translateY(-50%);
 }
 
 #harmonogram table {
