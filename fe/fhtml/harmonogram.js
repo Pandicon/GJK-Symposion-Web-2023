@@ -1,5 +1,4 @@
 const api="http://127.0.0.1:3976/";/*"https://api.simp.klubkepler.eu/";*/
-const days=["Čtvrtek 16.11.","Pátek 17.11.","Sobota 18.11"];
 var tt_lkp={};
 var tt_ld=false;
 async function cfetch(url) {
@@ -92,16 +91,16 @@ function make_cell(td,dd,data,i,j,tmb){
 		}
 	}
 }
-function make_table(div,data,dayid){
+function make_table(div,data,dayid,day){
 	let tt=div.appendChild(document.createElement("h4"));
 	tt.classList.add("day_title");
-	tt.appendChild(document.createTextNode(days[dayid]));
+	tt.appendChild(document.createTextNode(day));
 	const table=div.appendChild(document.createElement("table"));
 	table.id="timetable_"+dayid;
 	for(let i=0;i<data.length;i++){
 		const dr=data[i];
 		const tr=table.insertRow();
-		const tmb=i===0?"":(days[dayid]+" "+(data[i-1][0]===null?"":data[i-1][0].title));
+		const tmb=i===0?"":(day+" "+(data[i-1][0]===null?"":data[i-1][0].title));
 		for(let j=0;j<dr.length;j++){
 			let dd=dr[j];
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
@@ -134,7 +133,7 @@ async function gen_tables(){
 		const hd=data.data.harmonogram;
 		if(hd){
 			for(let i=0;i<hd.length;i++){
-				make_table(tables_div,hd[i].harmonogram,i);
+				make_table(tables_div,hd[i].harmonogram,i,hd[i].day);
 			}
 			let tu=tables_div.appendChild(document.createElement("span"));
 			tu.classList.add("last_update");
