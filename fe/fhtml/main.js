@@ -44,11 +44,10 @@ if (!gl) {
 	console.log("using webgl");
 	const vssrc=`attribute vec2 vp;
 	varying vec2 uv;
-	uniform vec2 resolution;
+	uniform float aspect;
 	uniform float tmv;
 	void main(){
 		gl_Position=vec4(vp*2.0-vec2(1.0,1.0),0.0,1.0);
-		float aspect=resolution.x/resolution.y;
 		uv=vp*vec2(2.,4./aspect);
 		uv+=vec2(-1.,sin(tmv/20.));
 	}`;
@@ -59,6 +58,7 @@ if (!gl) {
 	uniform float tm;
 	uniform vec2 mp;
 	uniform float ms;
+	uniform float mh;
 	float wave(vec2 p){
 		return sin(10.0*p.x+10.0*p.y)/5.0+
 			   sin(8.0*p.x+5.0*p.y)/3.0+
@@ -73,21 +73,24 @@ if (!gl) {
 		const vec3 colA=vec3(0.50,0.51,0.68);
 		const vec3 colB=vec3(0.18,0.18,0.35);
 		vec3 colbg=vec3(0.98,0.95,0.87);
-		const vec3 colline=vec3(0.2);
+		const vec3 colline=vec3(1.2);
 		float z=wave(uv)+2.0;
 		z*=2.0*(sin(tm/20.)+2.);
+		vec2 rmp=mp-gl_FragCoord.xy;
+		float mfactor=exp(-0.0001*dot(rmp,rmp));
+		z=mix(z,mh+3.0,mfactor);
 		float d2=fract(z*coef);
 		float d=fract(d2*2.0);
 		if(d2>0.5){
 			colbg=mix(colA,colB,(sin(uv.x*5.+tm/15.0)+1.)/2.0);
-			vec2 rmp=mp-gl_FragCoord.xy;
-			colbg=mix(colbg,vec3(1.0),ms*exp(-0.0001*dot(rmp,rmp)));
+			colbg=mix(colbg,vec3(1.0),ms*mfactor);
 		}
 		vec3 col;
 		for(float i=0.;i<5.0;i++){
 			col+=vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),1.5-(i+1.)/3.)*((i+1.)/5.0));
 		}
 		col=clamp(1.-col,0.,1.);
+		/*colbg=vec3((z-mh)*0.5,0.,(mh-z)*0.5);*/
 		gl_FragColor=vec4(mix(colline, colbg, col),1.);
 	}`;
 	function make_sh(tp,src) {
@@ -122,12 +125,28 @@ if (!gl) {
 	const begin_t = new Date().getTime();
 	let tm_loc=gl.getUniformLocation(sh,"tm");
 	let tmv_loc=gl.getUniformLocation(sh,"tmv");
-	let res_loc=gl.getUniformLocation(sh,"resolution");
+	let aspect_loc=gl.getUniformLocation(sh,"aspect");
 	let coef_loc=gl.getUniformLocation(sh,"coef");
 	let mp_loc=gl.getUniformLocation(sh,"mp");
 	let ms_loc=gl.getUniformLocation(sh,"ms");
+	let mh_loc=gl.getUniformLocation(sh,"mh");
+	function jswave(x,y){
+		return Math.sin(10.0*x+10.0*y)/5.0+
+			   Math.sin(8.0*x+5.0*y)/3.0+
+			   Math.sin(4.0*x+10.0*y)/-4.0+
+			   Math.sin(y)/2.0+
+			   Math.sin(x*x*y*5.0)+
+			   Math.sin(x*8.0+4.0)/5.0+
+			   Math.sin(y*10.0)/5.0+
+			   Math.sin(x)/4.0;
+	}
+	var smp={"x":0,"y":0};
 	document.onmousemove=function(e){
-		gl.uniform2f(mp_loc,e.clientX*2.0,canvas.height-e.clientY*2.0);
+		smp.x=e.clientX*2.0;
+		smp.y=canvas.height-e.clientY*2.0;
+		gl.uniform2f(mp_loc,smp.x,smp.y);
+		smp.x=smp.x*2/canvas.width-1;
+		smp.y=smp.y*4/canvas.width;
 	};
 	var ms=0.5,tms=0.5;
 	document.onmousedown=function(){tms=0.8;};
@@ -135,14 +154,16 @@ if (!gl) {
 	function render(){
 		canvas.width = header_bg.clientWidth*2.0;
 		canvas.height = header_bg.clientHeight*2.0;
-		const time=new Date().getTime()-begin_t;
+		const time=(new Date().getTime()-begin_t)*0.0005;
 		gl.viewport(0,0,canvas.width,canvas.height);
 		ms=(tms+ms)*0.5;
 		gl.uniform1f(ms_loc,ms);
-		gl.uniform1f(tm_loc,time*0.001);
-		gl.uniform1f(tmv_loc,time*0.001);
-		gl.uniform2f(res_loc, canvas.width, canvas.height);
+		gl.uniform1f(tm_loc,time);
+		gl.uniform1f(tmv_loc,time);
+		gl.uniform1f(aspect_loc, canvas.width/canvas.height);
 		gl.uniform1f(coef_loc, canvas.width>2200?1.25:0.75);
+		let st20=Math.sin(time/20.);
+		gl.uniform1f(mh_loc,(jswave(smp.x,smp.y+st20)+2.0)*2.0*(st20+2.));
 		gl.drawArrays(gl.TRIANGLES,0,6);
 		setTimeout(function(){requestAnimationFrame(render);},50);
 	};
