@@ -208,7 +208,7 @@ header {
 
 .header_bg_nogl {
 	background: url('/img/baked_bg.gif') no-repeat center center;
-	background-size:cover;
+	background-size: cover;
 }
 
 .header_fg {
@@ -294,7 +294,7 @@ nav a {
 #o_akci,
 #harmonogram,
 #kontakty {
-	scroll-margin-top: 120px;
+	scroll-margin-top: 140px;
 }
 
 #o_akci p {
@@ -337,35 +337,13 @@ nav a {
 	justify-content: center;
 	align-items: stretch;
 }
-.tt_note{
-	white-space:pre;
+
+.tt_note {
+	white-space: pre;
 }
 
-@media only screen and (max-width:1450px) and (min-width: 1140px) {
-
-	#o_akci,
-	#harmonogram,
-	#kontakty {
-		scroll-margin-top: 170px;
-	}
-
-	.title h1 {
-		margin-bottom: 0;
-	}
-
-	.title h2 {
-		display: block;
-		margin: 0 0 5px 40px;
-	}
-}
 
 @media only screen and (max-width:1250px) {
-
-	#o_akci,
-	#harmonogram,
-	#kontakty {
-		scroll-margin-top: 140px;
-	}
 
 	.header_fg {
 		padding-top: 0px;
