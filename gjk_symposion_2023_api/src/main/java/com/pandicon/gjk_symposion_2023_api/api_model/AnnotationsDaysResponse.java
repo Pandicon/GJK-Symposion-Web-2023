@@ -1,7 +1,6 @@
 package com.pandicon.gjk_symposion_2023_api.api_model;
 
 import java.util.HashMap;
-import java.util.List;
 
 public class AnnotationsDaysResponse {
     public long last_updated;
