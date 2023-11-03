@@ -138,8 +138,6 @@ async function gen_tables(){
 			let tu=tables_div.appendChild(document.createElement("span"));
 			tu.classList.add("last_update");
 			tu.textContent="Data z "+format_update(data.data.last_updated);
-			t.classList.add("tt_unfinished");
-			t.textContent="Harmonogram ještě není finální";
 		}
 	} else {
 		let n=tables_div.appendChild(document.createElement("span"));
