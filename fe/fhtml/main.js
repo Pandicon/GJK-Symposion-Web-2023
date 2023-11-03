@@ -57,6 +57,8 @@ if (!gl) {
 	varying vec2 uv;
 	uniform float coef;
 	uniform float tm;
+	uniform vec2 mp;
+	uniform float ms;
 	float wave(vec2 p){
 		return sin(10.0*p.x+10.0*p.y)/5.0+
 			   sin(8.0*p.x+5.0*p.y)/3.0+
@@ -76,7 +78,11 @@ if (!gl) {
 		z*=2.0*(sin(tm/20.)+2.);
 		float d2=fract(z*coef);
 		float d=fract(d2*2.0);
-		if(d2>0.5)colbg=mix(colA,colB,(sin(uv.x*5.+tm/15.0)+1.)/2.0);
+		if(d2>0.5){
+			colbg=mix(colA,colB,(sin(uv.x*5.+tm/15.0)+1.)/2.0);
+			vec2 rmp=mp-gl_FragCoord.xy;
+			colbg=mix(colbg,vec3(1.0),ms*exp(-0.0001*dot(rmp,rmp)));
+		}
 		vec3 col;
 		for(float i=0.;i<5.0;i++){
 			col+=vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),1.5-(i+1.)/3.)*((i+1.)/5.0));
@@ -120,22 +126,19 @@ if (!gl) {
 	let coef_loc=gl.getUniformLocation(sh,"coef");
 	let mp_loc=gl.getUniformLocation(sh,"mp");
 	let ms_loc=gl.getUniformLocation(sh,"ms");
-	let mh_loc=gl.getUniformLocation(sh,"mh");
 	document.onmousemove=function(e){
-		gl.uniform2f(mp_loc,e.clientX*0.01,(canvas.height-e.clientY)*0.01);
+		gl.uniform2f(mp_loc,e.clientX*2.0,canvas.height-e.clientY*2.0);
 	};
-	var ms=0.1,tms=0.3,mh=0.1,tmh=8.0;
-	document.onmousedown=function(){tms=1.3;tmh=12.0;};
-	document.onmouseup=function(){tms=0.3;tmh=6.0;};
+	var ms=0.5,tms=0.5;
+	document.onmousedown=function(){tms=0.8;};
+	document.onmouseup=function(){tms=0.5;};
 	function render(){
 		canvas.width = header_bg.clientWidth*2.0;
 		canvas.height = header_bg.clientHeight*2.0;
 		const time=new Date().getTime()-begin_t;
 		gl.viewport(0,0,canvas.width,canvas.height);
 		ms=(tms+ms)*0.5;
-		mh=(tmh+mh)*0.5;
 		gl.uniform1f(ms_loc,ms);
-		gl.uniform1f(mh_loc,mh);
 		gl.uniform1f(tm_loc,time*0.001);
 		gl.uniform1f(tmv_loc,time*0.001);
 		gl.uniform2f(res_loc, canvas.width, canvas.height);
