@@ -300,6 +300,7 @@ nav a {
 	background-color: #ffffffa0;
 	text-align: center;
 	border-radius: 5px;
+	min-width: 7rem;
 }
 
 #harmonogram table {
