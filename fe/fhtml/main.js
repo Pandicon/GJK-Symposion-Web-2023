@@ -36,7 +36,6 @@ let gl = canvas.getContext("webgl");
 if (!gl) {
 	gl=canvas.getContext("experimental-webgl");
 }
-gl = undefined;
 if (!gl) {
 	console.warn("webgl not supported, fallback to gif");
 	document.getElementById("header_bg").classList.add("header_bg_nogl");
