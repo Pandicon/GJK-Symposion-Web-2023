@@ -128,7 +128,7 @@ async function gen_tables(){
 		if("note"in data.data){
 			let n=tables_div.appendChild(document.createElement("span"));
 			n.classList.add("tt_note");
-			n.textContent=data.data.note;
+			n.textContent=data.data.note.replaceAll("\n","\r\n");
 		}
 		const hd=data.data.harmonogram;
 		if(hd){

@@ -337,6 +337,9 @@ nav a {
 	justify-content: center;
 	align-items: stretch;
 }
+.tt_note{
+	white-space:pre;
+}
 
 @media only screen and (max-width:1450px) and (min-width: 1140px) {
 
