@@ -327,6 +327,11 @@ nav a{
 	text-align:justify;
 }
 
+#harmonogram h3 {
+	display: inline-block;
+	margin-top: 0px;
+}
+
 #harmonogram td{
 	background-color:#ffffffa0;
 	text-align:center;
