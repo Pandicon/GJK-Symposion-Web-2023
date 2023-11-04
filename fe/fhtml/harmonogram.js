@@ -57,7 +57,7 @@ function popup(a){
 }
 function hide_lecture(){
 	document.getElementById("lecture_popup").style.display="none";
-	window.history.pushState("","",urlbase+"/");
+	window.history.pushState("","",urlbase);
 	window.onpopstate=null;
 }
 function make_cell(td,dd,data,i,j,tmb){
@@ -96,7 +96,10 @@ function make_cell(td,dd,data,i,j,tmb){
 function make_table(div,data,dayid,day){
 	let tt=div.appendChild(document.createElement("h4"));
 	tt.classList.add("day_title");
-	tt.appendChild(document.createTextNode(day));
+	tt.textContent=day;
+	tt.onclick=function(){
+		window.location="/harmonogram/day"+dayid;
+	};
 	const table=div.appendChild(document.createElement("table"));
 	table.id="timetable_"+dayid;
 	for(let i=0;i<data.length;i++){
@@ -120,12 +123,12 @@ function make_table(div,data,dayid,day){
 	etd.classList.add("time");
 	make_cell(etd,data[data.length-1][0],data,1,0,"");
 }
-async function gen_tables(){
+async function gen_tables(days){
 	let tables_div=document.getElementById("harmonogram_tables");
 	while(tables_div.firstChild){
 		tables_div.removeChild(tables_div.lastChild);
 	}
-	const data=await cfetch("harmonogram");
+	const data=await cfetch("harmonogram?days="+days);
 	if(data){
 		if("note"in data.data){
 			let n=tables_div.appendChild(document.createElement("span"));
@@ -135,7 +138,7 @@ async function gen_tables(){
 		const hd=data.data.harmonogram;
 		if(hd){
 			for(let i=0;i<hd.length;i++){
-				make_table(tables_div,hd[i].harmonogram,i,hd[i].day);
+				make_table(tables_div,hd[i].harmonogram,days.split(",")[i],hd[i].day);
 			}
 			let tu=tables_div.appendChild(document.createElement("span"));
 			tu.classList.add("last_update");
@@ -148,4 +151,3 @@ async function gen_tables(){
 	}
 	tt_ld=true;
 }
-gen_tables();

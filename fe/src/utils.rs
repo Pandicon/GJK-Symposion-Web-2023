@@ -59,3 +59,6 @@ pub fn file_mod_time(file : &str) -> u64 {
 pub fn uncached_response_t(content_type : &str) -> warp::http::response::Builder {
 	warp::http::Response::builder().header("content-type", content_type)
 }
+pub fn load_tables(days : &str) -> String {
+	format!("<script>gen_tables(\"{}\");</script>", days)
+}

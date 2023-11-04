@@ -105,8 +105,11 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 		out += &format!("\tlet _img_{} = include_bytes!(\"../img/{}\");\n", file_name_to_id(&fn_), fn_);
 	}
 	let mut routes = vec![];
-	out += &cached_ep_annot(&mut routes, "root", "", "utils::CT_HTML", &page_with_sections("_rsrc_uvod_html, _rsrc_o_akci_html, _rsrc_harmonogram_html, _rsrc_kontakty_html", ""), "");
-	out += &cached_ep_annot(&mut routes, "harmonogram", "\"harmonogram\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html", ""), "");
+	out += &cached_ep_annot(&mut routes, "root", "", "utils::CT_HTML", &page_with_sections("_rsrc_uvod_html, _rsrc_o_akci_html, _rsrc_harmonogram_html, &utils::load_tables(\"0,1,2\"), _rsrc_kontakty_html", "/"), "");
+	out += &cached_ep_annot(&mut routes, "harmonogram", "\"harmonogram\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html, &utils::load_tables(\"0,1,2\")", "/harmonogram"), "");
+	out += &cached_ep_annot(&mut routes, "harmonogram0", "\"harmonogram\" / \"day0\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html, &utils::load_tables(\"0\")", "/harmonogram/day0"), "");
+	out += &cached_ep_annot(&mut routes, "harmonogram1", "\"harmonogram\" / \"day1\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html, &utils::load_tables(\"1\")", "/harmonogram/day1"), "");
+	out += &cached_ep_annot(&mut routes, "harmonogram2", "\"harmonogram\" / \"day2\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html, &utils::load_tables(\"2\")", "/harmonogram/day2"), "");
 	if !HOT_RELOAD_OPTION {
 		if hot_reload {
 			out += &str_hot_reload_ep(&mut routes, "main_css", "\"main.css\"", "./fhtml/main.css", "utils::CT_CSS", "");
