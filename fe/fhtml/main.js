@@ -5,34 +5,23 @@ function open_timetable(){
 	window.location="/harmonogram";
 }
 function to_about_event() {
-	window.location = "/#o_akci";
+	window.location="/#o_akci";
 }
 function to_harmonogram() {
-	window.location = "/#harmonogram";
+	window.location="/#harmonogram";
 }
 function to_contacts() {
-	window.location = "/#kontakty";
+	window.location="/#kontakty";
 }
-
-/*
-__     ______   ____ _   _  ___  _     
-\ \   / /  _ \ / ___| | | |/ _ \| |    
- \ \ / /| |_) | |   | |_| | | | | |    
-  \ V / |  _ <| |___|  _  | |_| | |___ 
-   \_/  |_| \_\\____|_| |_|\___/|_____|
-*/
-const vrchol_title = 
-"  __     ______   ____ _   _  ___  _     \n" +
-"  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n" +
-"   \\ \\ / /| |_) | |   | |_| | | | | |    \n" + 
-"    \\ V / |  _ <| |___|  _  | |_| | |___ \n" + 
-"     \\_/  |_| \\_\\\\____|_| |_|\\___/|_____|";
-console.log(vrchol_title);
+console.log(`  __     ______   ____ _   _  ___  _     \n
+  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n
+   \\ \\ / /| |_) | |   | |_| | | | | |    \n
+    \\ V / |  _ <| |___|  _  | |_| | |___ \n
+     \\_/  |_| \\_\\\\____|_| |_|\\___/|_____|`);
 
 const canvas=document.getElementById("hbg_canvas");
 const header_bg=document.getElementById("header_bg");
 let gl = canvas.getContext("webgl");
-
 if (!gl) {
 	gl=canvas.getContext("experimental-webgl");
 }
@@ -90,8 +79,7 @@ if (!gl) {
 			col+=vec3(step(d/fwidth(z*3.5-((i+1.)/2.5)),1.5-(i+1.)/3.)*((i+1.)/5.0));
 		}
 		col=clamp(1.-col,0.,1.);
-		/*colbg=vec3((z-mh)*0.5,0.,(mh-z)*0.5);*/
-		gl_FragColor=vec4(mix(colline, colbg, col),1.);
+		gl_FragColor=vec4(mix(colline,colbg,col),1.);
 	}`;
 	function make_sh(tp,src) {
 		const o=gl.createShader(tp);

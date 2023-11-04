@@ -1,4 +1,4 @@
-const api="http://127.0.0.1:3976/";/*"https://api.simp.klubkepler.eu/";*/
+const api="https://api.simp.klubkepler.eu/";
 var tt_lkp={};
 var tt_ld=false;
 async function cfetch(url) {
@@ -111,7 +111,7 @@ function make_table(div,data,dayid,day){
 				if(i==0)
 					dd=null;
 				else
-					dd=data[i-1][0];
+					 dd=data[i-1][0];
 			}
 			make_cell(td,dd,data,i,j,tmb);
 		}
