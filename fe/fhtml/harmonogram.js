@@ -112,10 +112,11 @@ function make_table(div,data,dayid,day){
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
 			if(j==0){
 				td.classList.add("time");
-				if(i==0)
+				if(i==0) {
 					dd=null;
-				else
-					 dd=data[i-1][0];
+				} else {
+					dd=data[i-1][0];
+				}
 			}
 			make_cell(td,dd,data,i,j,tmb);
 		}
@@ -134,7 +135,10 @@ async function gen_tables(days){
 		if("note"in data.data){
 			let n=tables_div.appendChild(document.createElement("span"));
 			n.classList.add("tt_note");
-			n.textContent=data.data.note.replaceAll("\n","\r\n");
+			for(const line of data.data.note.split("\n")) {
+				let n_l=n.appendChild(document.createElement("div"));
+				n_l.textContent=line;
+			}
 		}
 		const hd=data.data.harmonogram;
 		if(hd){

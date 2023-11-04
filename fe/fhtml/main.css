@@ -364,10 +364,6 @@ nav a{
 	align-items:stretch;
 }
 
-.tt_note{
-	white-space:pre;
-}
-
 .clickable{
 	cursor:pointer;
 }
