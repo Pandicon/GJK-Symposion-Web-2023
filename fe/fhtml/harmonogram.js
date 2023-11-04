@@ -95,6 +95,7 @@ function make_cell(td,dd,data,i,j,tmb){
 }
 function make_table(div,data,dayid,day){
 	let tt=div.appendChild(document.createElement("h4"));
+	tt.classList.add("clickable");
 	tt.classList.add("day_title");
 	tt.textContent=day;
 	tt.onclick=function(){
