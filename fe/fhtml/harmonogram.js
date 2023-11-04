@@ -45,7 +45,7 @@ function lecture_popup(lec,title,time,room,id){
 		document.getElementById("ov_annotation").textContent=data.data.annotations[id].annotation;
 		document.getElementById("ov_lecturer_info").textContent=data.data.annotations[id].lecturer_info;
 		document.getElementById("ov_last_update").textContent="Data z "+format_update(data.data.last_updated);
-		window.history.pushState("","",urlbase+"/anotace/"+id);
+		window.history.pushState("","",urlbase+"anotace/"+id);
 		window.onpopstate=function(e){hide_lecture();};
 	};
 }
