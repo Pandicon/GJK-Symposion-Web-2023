@@ -36,9 +36,11 @@ p {
 
 main {
 	padding: 30px;
-	background: url('/img/bg.svg') no-repeat center center fixed;
-	background-size: cover;
 	border-bottom: 1px solid black;
+}
+main,#ov_bg{
+	background:url('/img/bg.svg')no-repeat center center fixed;
+	background-size:cover;
 }
 
 h3 {
@@ -109,6 +111,11 @@ h4 {
 	background: #000d;
 }
 
+#ov_bg{
+	position:fixed;
+	width:90vw;
+	height:90vh;
+}
 #ov {
 	position: fixed;
 	width: 90vw;
@@ -122,8 +129,10 @@ h4 {
 	border-radius: 10px;
 }
 
-#ov_container {
-	margin: 10px;
+#ov_container{
+	margin:10px;
+	z-index:903;
+	position:relative;
 }
 
 #ov_lecturer {
