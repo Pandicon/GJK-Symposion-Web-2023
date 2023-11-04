@@ -13,6 +13,12 @@
 	font-family: "Oswald", serif, system-ui;
 }
 
+.icons img{
+	width:80px;
+	height:80px;
+	margin:10px;
+}
+
 html {
 	scroll-behavior: smooth;
 }
