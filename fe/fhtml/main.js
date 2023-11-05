@@ -25,11 +25,10 @@ let gl = canvas.getContext("webgl");
 if (!gl) {
 	gl=canvas.getContext("experimental-webgl");
 }
-if (!gl) {
+if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 	console.warn("webgl not supported, fallback to gif");
 	document.getElementById("header_bg").classList.add("header_bg_nogl");
 } else {
-	gl.getExtension("OES_standard_derivatives");
 	console.log("using webgl");
 	const vssrc=`attribute vec2 vp;
 	varying vec2 uv;
