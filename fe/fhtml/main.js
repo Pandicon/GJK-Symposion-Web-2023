@@ -13,10 +13,10 @@ function to_harmonogram() {
 function to_contacts() {
 	window.location="/#kontakty";
 }
-console.log(`  __     ______   ____ _   _  ___  _     
-  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    
-   \\ \\ / /| |_) | |   | |_| | | | | |    
-    \\ V / |  _ <| |___|  _  | |_| | |___ 
+console.log(`  __     ______   ____ _   _  ___  _     \n
+  \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n
+   \\ \\ / /| |_) | |   | |_| | | | | |    \n
+    \\ V / |  _ <| |___|  _  | |_| | |___ \n
      \\_/  |_| \\_\\\\____|_| |_|\\___/|_____|`);
 
 const canvas=document.getElementById("hbg_canvas");
@@ -109,14 +109,14 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 	const pattr=gl.getAttribLocation(sh,"vp");
 	gl.vertexAttribPointer(pattr,2,gl.FLOAT,false,0,0);
 	gl.enableVertexAttribArray(pattr);
-	const begin_t = new Date().getTime();
-	let tm_loc=gl.getUniformLocation(sh,"tm");
-	let tmv_loc=gl.getUniformLocation(sh,"tmv");
-	let aspect_loc=gl.getUniformLocation(sh,"aspect");
-	let coef_loc=gl.getUniformLocation(sh,"coef");
-	let mp_loc=gl.getUniformLocation(sh,"mp");
-	let ms_loc=gl.getUniformLocation(sh,"ms");
-	let mh_loc=gl.getUniformLocation(sh,"mh");
+	var begin_t = new Date().getTime();
+	var tm_loc=gl.getUniformLocation(sh,"tm");
+	var tmv_loc=gl.getUniformLocation(sh,"tmv");
+	var aspect_loc=gl.getUniformLocation(sh,"aspect");
+	var coef_loc=gl.getUniformLocation(sh,"coef");
+	var mp_loc=gl.getUniformLocation(sh,"mp");
+	var ms_loc=gl.getUniformLocation(sh,"ms");
+	var mh_loc=gl.getUniformLocation(sh,"mh");
 	function jswave(x,y){
 		return Math.sin(10.0*x+10.0*y)/5.0+
 			   Math.sin(8.0*x+5.0*y)/3.0+
