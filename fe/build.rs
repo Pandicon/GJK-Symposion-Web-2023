@@ -15,7 +15,7 @@ fn mk_clean(file : &str) {
 	}
 	let mut keep = false;
 	buff.retain(|c| {
-		if c != '\t' && c != '\n' {
+		if c != '\t' && c != '\r' && c != '\n' {
 			if file.ends_with(".js") && c == '#' {
 				keep = true;
 			}
