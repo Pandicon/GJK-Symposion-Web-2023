@@ -1,18 +1,18 @@
 function open_main_page(){
 	window.location="/";
-}
+};
 function open_timetable(){
 	window.location="/harmonogram";
-}
+};
 function to_about_event() {
 	window.location="/#o_akci";
-}
+};
 function to_harmonogram() {
 	window.location="/#harmonogram";
-}
+};
 function to_contacts() {
 	window.location="/#kontakty";
-}
+};
 console.log(`  __     ______   ____ _   _  ___  _     \n
   \\ \\   / /  _ \\ / ___| | | |/ _ \\| |    \n
    \\ \\ / /| |_) | |   | |_| | | | | |    \n
@@ -24,7 +24,7 @@ const header_bg=document.getElementById("header_bg");
 let gl = canvas.getContext("webgl");
 if (!gl) {
 	gl=canvas.getContext("experimental-webgl");
-}
+};
 if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 	console.warn("webgl not supported, fallback to gif");
 	document.getElementById("header_bg").classList.add("header_bg_nogl");
@@ -85,7 +85,7 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 		gl.shaderSource(o,src);
 		gl.compileShader(o);
 		return o;
-	}
+	};
 	const vs=make_sh(gl.VERTEX_SHADER,vssrc);
 	const fs=make_sh(gl.FRAGMENT_SHADER,fssrc);
 	const sh=gl.createProgram();
@@ -126,7 +126,7 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 			   Math.sin(x*8.0+4.0)/5.0+
 			   Math.sin(y*10.0)/5.0+
 			   Math.sin(x)/4.0;
-	}
+	};
 	var smp={"x":0,"y":0};
 	document.onmousemove=function(e){
 		smp.x=e.clientX*2.0;
