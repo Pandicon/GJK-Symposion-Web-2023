@@ -372,6 +372,14 @@ nav a{
 	cursor:pointer;
 }
 
+footer .emj{
+	display:none;
+}
+
+footer:hover .emj{
+	display:unset;
+}
+
 
 @media only screen and (max-width:1250px){
 	.header_fg{
