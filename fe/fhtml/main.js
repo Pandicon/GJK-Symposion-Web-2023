@@ -40,7 +40,7 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 		uv+=vec2(-1.,sin(tmv/20.));
 	}`;
 	const fssrc=`#extension GL_OES_standard_derivatives : enable
-	precision mediump float;
+	precision highp float;
 	varying vec2 uv;
 	uniform float coef;
 	uniform float tm;
