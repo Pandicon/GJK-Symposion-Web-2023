@@ -155,4 +155,11 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 		setTimeout(function(){requestAnimationFrame(render);},50);
 	};
 	requestAnimationFrame(render);
-}
+};
+document.getElementsByTagName("footer")[0].addEventListener("dblclick",function(e){
+	const s=document.getElementsByClassName("emj");
+	const d=["","inline"];
+	for(let i=0;i<s.length;i++){
+		s[i].style.display=d[1-d.indexOf(s[i].style.display)];
+	}
+});
