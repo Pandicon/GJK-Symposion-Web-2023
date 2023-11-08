@@ -61,7 +61,7 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 		const vec3 colA=vec3(0.50,0.51,0.68);
 		const vec3 colB=vec3(0.18,0.18,0.35);
 		vec3 colbg=vec3(0.98,0.95,0.87);
-		const vec3 colline=vec3(0.2);
+		const vec3 colline=vec3(1.0);
 		float z=wave(uv)+2.0;
 		z*=2.0*(sin(tm/20.)+2.);
 		vec2 rmp=mp-gl_FragCoord.xy;
