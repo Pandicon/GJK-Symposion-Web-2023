@@ -72,13 +72,25 @@ function make_cell(td,dd,data,i,j,tmb){
 		if(j>0){
 			let l=document.createElement("span");
 			l.classList.add("lecturer");
-			l.appendChild(document.createTextNode(dd.lecturer));
+			const split_lecturer = dd.lecturer.split("\n");
+			for(let i = 0; i < split_lecturer.length; i += 1) {
+				if(i > 0) {
+					l.appendChild(document.createElement("br"));
+				}
+				l.appendChild(document.createTextNode(split_lecturer[i]));
+			}
 			td.appendChild(l);
 			td.appendChild(document.createElement("br"));
 		}
 		let t=document.createElement("span");
 		t.classList.add("lecture");
-		t.appendChild(document.createTextNode(dd.title));
+		const split_title = dd.title.split("\n");
+			for(let i = 0; i < split_title.length; i += 1) {
+				if(i > 0) {
+					t.appendChild(document.createElement("br"));
+				}
+				t.appendChild(document.createTextNode(split_title[i]));
+			}
 		td.appendChild(t);
 		if(dd.for_younger){
 			let t=document.createElement("span");
