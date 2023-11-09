@@ -10,7 +10,7 @@
 }
 
 *{
-	font-family:"Oswald",serif,system-ui;
+	font-family: Oswald, -apple-system, "Oswald",serif, system-ui;
 }
 
 .icons img{
@@ -205,6 +205,13 @@ h4{
 	font-weight:bold;
 	border:3px solid #959286;
 	border-radius:5px;
+	cursor: pointer;
+	-webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 header{
@@ -374,6 +381,7 @@ nav a{
 
 footer .emj{
 	display:none;
+	width: 1.5em;
 }
 
 @media only screen and (max-width:1250px){
@@ -662,8 +670,16 @@ footer .emj{
 	#o_akci p {
 		font-size: 3vw;
 	}
+
+	#ov_lecturer_info, #ov_annotation {
+		font-size: 4vw;
+	}
 	
 	#harmonogram .day_title {
 		font-size: 4vw;
+	}
+
+	footer div {
+		font-size: 2.5vw;
 	}
 }
