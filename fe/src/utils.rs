@@ -26,6 +26,7 @@ pub fn insert_sections(src : &str, sections : &[&str]) -> String {
 pub const CT_HTML : &str = "text/html; charset=utf-8";
 pub const CT_CSS : &str = "text/css; charset=utf-8";
 pub const CT_JS : &str = "text/javascript; charset=utf-8";
+pub const CT_XML : &str = "text/xml; charset=utf-8";
 pub const CT_PNG : &str = "image/png";
 pub const CT_SVG : &str = "image/svg+xml";
 pub const CT_GIF : &str = "image/gif";

@@ -104,6 +104,10 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 		let fn_ = f.unwrap().file_name().into_string().unwrap();
 		out += &format!("\tlet _img_{} = include_bytes!(\"../img/{}\");\n", file_name_to_id(&fn_), fn_);
 	}
+	for f in std::fs::read_dir("./documents/").unwrap() {
+		let fn_ = f.unwrap().file_name().into_string().unwrap();
+		out += &format!("\tlet _doc_{} = include_bytes!(\"../documents/{}\");\n", file_name_to_id(&fn_), fn_);
+	}
 	let mut routes = vec![];
 	out += &cached_ep_annot(&mut routes, "root", "", "utils::CT_HTML", &page_with_sections("_rsrc_uvod_html, _rsrc_o_akci_html, _rsrc_harmonogram_html, &utils::load_tables(\"0,1,2\"), _rsrc_kontakty_html", "/"), "");
 	out += &cached_ep_annot(&mut routes, "harmonogram", "\"harmonogram\"", "utils::CT_HTML", &page_with_sections("_rsrc_harmonogram_html, &utils::load_tables(\"0,1,2\")", "/harmonogram/"), "");
@@ -128,6 +132,7 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += &cached_ep(&mut routes, "maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "_img_mail_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "bgi", "\"img\" / \"bg.svg\"", "utils::CT_SVG", "_img_bg_svg.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "baked_bgi", "\"img\" / \"baked_bg.gif\"", "utils::CT_GIF", "_img_baked_bg_gif.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "sitemap", "\"sitemap.xml\"", "utils::CT_XML", "_doc_sitemap_xml.as_slice()", "", "_slice");
 	out += &(String::from("\n\tlet routes = ") + routes[0] + "_route");
 	for r in routes.iter().skip(1) {
 		out += &(String::from(".or(") + r + "_route)");
