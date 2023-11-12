@@ -122,8 +122,12 @@ function make_table(div,data,dayid,day){
 		for(let j=0;j<dr.length;j++){
 			let dd=dr[j];
 			const td=(j==0||i==0)?tr.appendChild(document.createElement("th")):tr.insertCell();
+			if(i==0) {
+				td.scope = "col";
+			}
 			if(j==0){
 				td.classList.add("time");
+				td.scope = "row";
 				if(i==0) {
 					dd=null;
 				} else {
@@ -135,6 +139,7 @@ function make_table(div,data,dayid,day){
 	}
 	let etd=table.insertRow().appendChild(document.createElement("th"));
 	etd.classList.add("time");
+	etd.scope = "row";
 	make_cell(etd,data[data.length-1][0],data,1,0,"");
 }
 async function gen_tables(days){
