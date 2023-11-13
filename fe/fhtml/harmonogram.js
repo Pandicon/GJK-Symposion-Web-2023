@@ -38,12 +38,36 @@ function lecture_popup(lec,title,time,room,id){
 	return async function(){
 		const data=await cfetch("annotations?ids="+id);
 		document.getElementById("lecture_popup").style.display="block";
-		document.getElementById("ov_lecturer").textContent=lec;
-		document.getElementById("ov_title").textContent=title;
+		const split_lec = lec.split("\n");
+		for(let i = 0; i < split_lec.length; i += 1) {
+			if(i > 0) {
+				document.getElementById("ov_lecturer").appendChild(document.createElement("br"));
+			}
+			document.getElementById("ov_lecturer").appendChild(document.createTextNode(split_lec[i]));
+		}
+		const split_title = title.split("\n");
+		for(let i = 0; i < split_title.length; i += 1) {
+			if(i > 0) {
+				document.getElementById("ov_title").appendChild(document.createElement("br"));
+			}
+			document.getElementById("ov_title").appendChild(document.createTextNode(split_title[i]));
+		}
 		document.getElementById("ov_time").textContent=time;
 		document.getElementById("ov_room").textContent=room;
-		document.getElementById("ov_annotation").textContent=data.data.annotations[id].annotation;
-		document.getElementById("ov_lecturer_info").textContent=data.data.annotations[id].lecturer_info;
+		const split_annotation = data.data.annotations[id].annotation.split("\n");
+		for(let i = 0; i < split_annotation.length; i += 1) {
+			if(i > 0) {
+				document.getElementById("ov_annotation").appendChild(document.createElement("br"));
+			}
+			document.getElementById("ov_annotation").appendChild(document.createTextNode(split_annotation[i]));
+		}
+		const split_lecturer_info = data.data.annotations[id].lecturer_info.split("\n");
+		for(let i = 0; i < split_lecturer_info.length; i += 1) {
+			if(i > 0) {
+				document.getElementById("ov_lecturer_info").appendChild(document.createElement("br"));
+			}
+			document.getElementById("ov_lecturer_info").appendChild(document.createTextNode(split_lecturer_info[i]));
+		}
 		document.getElementById("ov_last_update").textContent="Data z "+format_update(data.data.last_updated);
 		window.history.pushState("","",urlbase+"anotace/"+id);
 		window.onpopstate=function(e){hide_lecture();};
@@ -55,7 +79,16 @@ function popup(a){
 	else if(a in tt_lkp)
 		tt_lkp[a]();
 }
+function remove_children(node) {
+	while (node.firstChild) {
+		node.removeChild(node.lastChild);
+	}
+}
 function hide_lecture(){
+	remove_children(document.getElementById("ov_lecturer"));
+	remove_children(document.getElementById("ov_title"));
+	remove_children(document.getElementById("ov_annotation"));
+	remove_children(document.getElementById("ov_lecturer_info"));
 	document.getElementById("lecture_popup").style.display="none";
 	window.history.pushState("","",urlbase);
 	window.onpopstate=null;
@@ -85,12 +118,12 @@ function make_cell(td,dd,data,i,j,tmb){
 		let t=document.createElement("span");
 		t.classList.add("lecture");
 		const split_title = dd.title.split("\n");
-			for(let i = 0; i < split_title.length; i += 1) {
-				if(i > 0) {
-					t.appendChild(document.createElement("br"));
-				}
-				t.appendChild(document.createTextNode(split_title[i]));
+		for(let i = 0; i < split_title.length; i += 1) {
+			if(i > 0) {
+				t.appendChild(document.createElement("br"));
 			}
+			t.appendChild(document.createTextNode(split_title[i]));
+		}
 		td.appendChild(t);
 		if(dd.for_younger){
 			let t=document.createElement("span");
