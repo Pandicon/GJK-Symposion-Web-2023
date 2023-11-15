@@ -496,6 +496,10 @@ footer .emj{
 		flex-direction:column;
 		align-items:center;
 	}
+
+	.mobile_hidden{
+		display:none;
+	}
 }
 
 @media only screen and (max-width:800px){
