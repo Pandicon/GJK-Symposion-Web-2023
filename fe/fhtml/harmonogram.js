@@ -1,6 +1,7 @@
 const api="https://api.simp.klubkepler.eu/";
 var tt_lkp={};
 var tt_ld=false;
+var time_info = new Set();
 async function cfetch(url) {
 	let lst="T_"+url;
 	let t=Math.floor(new Date().getTime()/1000);
@@ -125,6 +126,12 @@ function make_cell(td,dd,data,i,j,tmb){
 			t.appendChild(document.createTextNode(split_title[i]));
 		}
 		td.appendChild(t);
+		let cell_data = `time:${tm},lecturer:${dd.lecturer},title:${dd.title}`;
+		if(time_info.has(cell_data)) {
+			td.classList.add("mobile_hidden");
+		} else {
+			time_info.add(cell_data);
+		};
 		if(dd.for_younger){
 			let t=document.createElement("span");
 			t.classList.add("for_younger");
@@ -139,6 +146,7 @@ function make_cell(td,dd,data,i,j,tmb){
 	}
 }
 function make_table(div,data,dayid,day){
+	time_info = new Set();
 	let tt=div.appendChild(document.createElement("h4"));
 	tt.classList.add("clickable");
 	tt.classList.add("day_title");
@@ -174,6 +182,7 @@ function make_table(div,data,dayid,day){
 	etd.classList.add("time");
 	etd.scope = "row";
 	make_cell(etd,data[data.length-1][0],data,1,0,"");
+	time_info = new Set();
 }
 async function gen_tables(days){
 	let tables_div=document.getElementById("harmonogram_tables");
