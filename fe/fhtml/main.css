@@ -498,7 +498,7 @@ footer .emj{
 	}
 
 	.mobile_hidden{
-		display:none;
+		display:none !important;
 	}
 }
 
