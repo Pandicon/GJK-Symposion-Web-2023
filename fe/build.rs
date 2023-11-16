@@ -130,6 +130,7 @@ pub fn cached_response_t(content_type : &str) -> warp::http::response::Builder {
 	out += &cached_ep(&mut routes, "fbi", "\"img\" / \"fb.png\"", "utils::CT_PNG", "_img_fb_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "igi", "\"img\" / \"ig.png\"", "utils::CT_PNG", "_img_ig_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "maili", "\"img\" / \"mail.png\"", "utils::CT_PNG", "_img_mail_png.as_slice()", "", "_slice");
+	out += &cached_ep(&mut routes, "labyrint_sveta_a_raj_srdce_i", "\"img\" / \"labyrint_sveta_a_raj_srdce.png\"", "utils::CT_PNG", "_img_labyrint_sveta_a_raj_srdce_png.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "bgi", "\"img\" / \"bg.svg\"", "utils::CT_SVG", "_img_bg_svg.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "baked_bgi", "\"img\" / \"baked_bg.gif\"", "utils::CT_GIF", "_img_baked_bg_gif.as_slice()", "", "_slice");
 	out += &cached_ep(&mut routes, "sitemap", "\"sitemap.xml\"", "utils::CT_XML", "_doc_sitemap_xml.as_slice()", "", "_slice");
