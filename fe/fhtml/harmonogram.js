@@ -38,6 +38,7 @@ function format_update(utct){
 function lecture_popup(lec,title,time,room,id){
 	return async function(){
 		const data=await cfetch("annotations?ids="+id);
+		clear_info();
 		document.getElementById("lecture_popup").style.display="block";
 		const split_lec = lec.split("\n");
 		for(let i = 0; i < split_lec.length; i += 1) {
@@ -85,11 +86,14 @@ function remove_children(node) {
 		node.removeChild(node.lastChild);
 	}
 }
-function hide_lecture(){
+function clear_info(){
 	remove_children(document.getElementById("ov_lecturer"));
 	remove_children(document.getElementById("ov_title"));
 	remove_children(document.getElementById("ov_annotation"));
 	remove_children(document.getElementById("ov_lecturer_info"));
+}
+function hide_lecture(){
+	clear_info();
 	document.getElementById("lecture_popup").style.display="none";
 	window.history.pushState("","",urlbase);
 	window.onpopstate=null;
