@@ -138,7 +138,15 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 	var ms=0.5,tms=0.5;
 	document.onmousedown=function(){tms=0.8;};
 	document.onmouseup=function(){tms=0.5;};
-	function render(){
+	let then = 0;
+	let fps = 0;
+	let droppedFrames = 0;
+	let lowPower = false;
+	function render(now){
+		now *= 0.001;
+		const deltaTime = now - then;
+		then = now
+		fps = 1 / deltaTime;
 		canvas.width = header_bg.clientWidth*2.0;
 		canvas.height = header_bg.clientHeight*2.0;
 		const time=(new Date().getTime()-begin_t)*0.0005;
@@ -152,7 +160,18 @@ if (!gl || !gl.getExtension("OES_standard_derivatives")) {
 		let st20=Math.sin(time/20.);
 		gl.uniform1f(mh_loc,(jswave(smp.x,smp.y+st20)+2.0)*2.0*(st20+2.));
 		gl.drawArrays(gl.TRIANGLES,0,6);
-		setTimeout(function(){requestAnimationFrame(render);},50);
+		if(fps < 15){
+			droppedFrames += 1;
+			
+			if(droppedFrames > 50){
+				console.warn("Too many dropped frames switching to low FPS mode.");
+				lowPower = true;
+			}
+		}
+		else{
+			droppedFrames -=1;
+		}
+		setTimeout(function(){requestAnimationFrame(render);},lowPower ? 1000 : 50);
 	};
 	requestAnimationFrame(render);
 };
