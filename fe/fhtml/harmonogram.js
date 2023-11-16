@@ -61,14 +61,18 @@ function lecture_popup(lec,title,time,room,id){
 			if(i > 0) {
 				document.getElementById("ov_annotation").appendChild(document.createElement("br"));
 			}
-			document.getElementById("ov_annotation").appendChild(document.createTextNode(split_annotation[i]));
+			let new_child = document.createElement("span");
+			new_child.innerHTML = split_annotation[i];
+			document.getElementById("ov_annotation").appendChild(new_child);
 		}
 		const split_lecturer_info = data.data.annotations[id].lecturer_info.split("\n");
 		for(let i = 0; i < split_lecturer_info.length; i += 1) {
 			if(i > 0) {
 				document.getElementById("ov_lecturer_info").appendChild(document.createElement("br"));
 			}
-			document.getElementById("ov_lecturer_info").appendChild(document.createTextNode(split_lecturer_info[i]));
+			let new_child = document.createElement("span");
+			new_child.innerHTML = split_lecturer_info[i];
+			document.getElementById("ov_lecturer_info").appendChild(new_child);
 		}
 		document.getElementById("ov_last_update").textContent="Data z "+format_update(data.data.last_updated);
 		window.history.pushState("","",urlbase+"anotace/"+id);
