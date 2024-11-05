@@ -1,15 +1,15 @@
 # GJK-Symposion-Web-2023
  
-toto bude web ohnivák
+This is the website for the 2023 GJK Symposion event.
 
-## build instructions
+## Build instructions
 
-### frontend
+### Frontend
 
  - [Install Rust](https://www.rust-lang.org/tools/install)
  - Run `cargo run` from `/fe/` directory
 
-### backend
+### Backend
 
  - Install JDK (17+)
  - Run `mvnw`(linux)/`mvnw.cmd`(windows) with argument `spring-boot:run` script from it's directory
